@@ -198,3 +198,5 @@ Ancient's Foresight	Ancient's Foresight	1		misl									RalThul	r08	r10					dmg%
 Echo Weapon	Echo Weapon	1		thro	jave								SolDol	r12	r14					dmg%		40	60	pierce		20	30	heal-kill		2	2	att%		50	50													0
 Echo Quiver	Echo Quiver	1		misl									SolDol	r12	r14					dmg%		20	30	pierce		20	30	heal-kill		2	2	att%		50	50													0
 Finesse	Finesse	1		tors									NefRalDol	r04	r08	r14				ac%		50	100	pierce		25	35	swing2		20	20	gold%		45	45													0
+Runeword77	Loyalty	1		helm									ChamUmJah	r32	r22	r31				allskills		2	2	aura	Prayer	20	23	hp%		5	5	mana%		10	10	balance3		30	30	ac		150	150					0
+Obsession Sword	Obsession	1		swor									ZodIstLemLumIoNef	r33	r24	r20	r17	r16	r04	allskills		4	4	cast2		30	30	cast-skill	Weaken	24	18	hp%		5	10	res-all		20	30	balance2		40	40	regen-mana		8	12	0
