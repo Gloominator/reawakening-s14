@@ -20,7 +20,7 @@
 4. Skilldesc: 26 mod rows padded to 118-col header
 
 ### Not yet active
-- Mod's drop-rate boosts in shared TC rows (see docs/stage2_deferred.md)
+- ~~Mod's drop-rate boosts in shared TC rows~~ -> DONE (see below)
 - Mastery rework (mod replaced skills 128/134; S14 versions kept, mod's appended as 614/615)
 - Density variants (1x/2x/5x/10x mpqs)
 
@@ -35,3 +35,18 @@ Current working install:
 - ProjectD2/data/ = merged data tree from this repo (txt + tbl + dc6 + compiled bins)
 - ProjectD2/PlugY.ini: Param=-3dfx -plugy -direct -txt
 - ProjectD2/BH.dll = modded BH v11.0.1 (UNDER TEST - if boot crashes, `cp Live/BH.dll BH.dll`)
+
+## 2026-11-05 (evening) — TC drop-rate boosts ported (84 rows)
+
+- Mod's TC edits isolated by diffing mod-S11 vs S14-vanilla row by row (no vanilla baseline
+  exists in the mod repo: initial import is already modded; "backup s10 /data" is the modded
+  S10 tree; S11 import -> final touched no TC rows).
+- Ported: Good TCs (chipped gems removed in Hell, Orbs + Fate Drop injected), Runes cascade
+  probs (S14 codes kept), Junk halving (S14 ammo structure kept), Treasure Fallen boosts,
+  BR Arena + utility quality scalars, Corrupted Zone.
+- Skipped (documented in docs/tc_boosts.md): all boss/uber TC rows incl. 10x key-drop boost
+  and bet/fed->dcso swap; S11 map-tier pools (S14 reworked the roster); ammo restructure.
+- tools/tc_apply_boosts.py is the applicator; tc_diff_report.py / tc_mod_edits.py are the analysis.
+- Integrity: 1269 issues, identical to pre-edit baseline. Only TreasureClassEx.txt changed.
+- Deployed to ProjectD2/data; all bins deleted for recompile on next launch.
+  TreasureClassEx.bin removed from repo (stale; game regenerates).

@@ -1,8 +1,8 @@
-# Reawakening — PD2 Season 14 port (Stage 1 complete)
+# Reawakening — PD2 Season 14 port (Stage 1 + TC drop boosts done)
 
 An AI-assisted port of [pd2-reawakening](https://github.com/synpoox/pd2-reawakening) (built for PD2 S11)
 onto the PD2 Season 14 "Alliance" data. The game boots, characters enter the world, and the mod's
-content (awakened skills, replica/legacy items, fate cards, orbs, stackable runes/gems) is in place.
+content (awakened items, replica/legacy items, fate cards, orbs, boosted rune/gem drops) is in place.
 
 This document is written for the mod's original author (and anyone else who wants to polish it).
 
@@ -49,10 +49,11 @@ Merge rules (tools in `tools/`):
 
 See `docs/stage2_deferred.md` for the full list with recovery methods. Headlines:
 
-- **Drop-rate boosts** in shared TreasureClassEx rows (the "rune drops +500%" etc.) were tuned on
-  S11 values; S14 rebalanced the same rows, so the *factors* need to be extracted from your git
-  history (your hand-edit commits vs season imports) and re-applied to S14 rows.
-  Already working: mod `ItemRatio` (≈0.77× divisors), stacked rune/gem drops (`rXXs`/`gXXs` swaps).
+- **Drop-rate boosts**: ✅ DONE — see `docs/tc_boosts.md`. Runes cascade probs, Good-TC
+  gem/orb/fate-card injection, junk halving, Treasure Fallen, BR Arena + utility quality
+  scalars are all ported (84 TC rows). Skipped per scope decision: boss/uber TC rows
+  (including the mod's 10× key-drop boost and `bet`/`fed`→`dcso` material swap) and the
+  outdated S11 map-tier pools — all recoverable if wanted.
 - **Mastery rework**: your mod *replaced* skills 128/134 (One/Two-Hand Mastery → General Mastery /
   Polearm & Spear Mastery). The name-keyed merge treated the renames as *new* skills (now 614/615);
   S14's originals are still at 128/134. To restore the rework, replace those rows deliberately.
