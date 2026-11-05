@@ -23,3 +23,15 @@
 - Mod's drop-rate boosts in shared TC rows (see docs/stage2_deferred.md)
 - Mastery rework (mod replaced skills 128/134; S14 versions kept, mod's appended as 614/615)
 - Density variants (1x/2x/5x/10x mpqs)
+
+## 2026-11-05 (later) — mpq install REVERTED; running in -direct -txt mode
+
+The hand-built mpq was rejected by the game ("file data is corrupt" on load) - Storm.dll's
+reader is stricter than our writer. User opted to stay in txt mode; mpq writer shelved
+(scout/pd2data_new.mpq kept for reference, tools/mpq_write.py).
+
+Current working install:
+- ProjectD2/pd2data.mpq = vanilla S14 (fallback only; disk data takes precedence)
+- ProjectD2/data/ = merged data tree from this repo (txt + tbl + dc6 + compiled bins)
+- ProjectD2/PlugY.ini: Param=-3dfx -plugy -direct -txt
+- ProjectD2/BH.dll = modded BH v11.0.1 (UNDER TEST - if boot crashes, `cp Live/BH.dll BH.dll`)
