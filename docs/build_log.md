@@ -76,3 +76,23 @@ identify and Horadric cube (item6=tbk, item7=ibk, item8=box).
 
 **Note:** saves written while the bug was present are misaligned and stay
 broken — delete old test characters.
+
+## 2026-11-06 — Reawakening skill design ported
+
+- Added `tools/port_reawakening_skills.py`: replays cells changed by Reawakening's
+  commits using final S11 values, while preserving unrelated S14 cells and row IDs.
+- Restored shared edits across Skills, Skilldesc, Missiles, summon MonStats/MonProp,
+  and PetType. This includes Blink Arrow, Lightning Fury Sentry, Joust, movement
+  skills, aura item scaling, summon behavior, and custom item-stat formulas.
+- Restored both Barbarian mastery reworks on rows 128/134 without adding class-tagged
+  skills. All seven classes still have exactly 36 skills; all 653 skill names are unique.
+- Applied 61 Reawakening skill/PvP string values and normalized MonProp's splash
+  property code to the existing `inc-splash-radius` property.
+- Fixed the ItemStatCost merge reclaiming live S14 stat `extra_holybolts`. It is
+  restored at row 481; `awakened` now uses the unused `item_levelreqpct` row 94.
+- Validation: all formula stat references resolve, every custom item stat used by
+  the restored skills is live, 511 unique ItemStatCost rows, IDs match row indices,
+  and the existing integrity baseline remains 1269 known issues.
+- Deployed the changed source tables to `ProjectD2/data`. The game generated all 90
+  bins; a temporary Amazon entered Rogue Encampment and rejoined after saving. Test
+  files were removed afterward.

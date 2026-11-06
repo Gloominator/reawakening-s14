@@ -48,12 +48,11 @@ REGENERATED from S14 values using the per-row multipliers extracted from the mod
 (they live wherever the launcher stored them; check ra-launcher releases).
 Also: mod raised some map levels (Zhar Kurast MonLvl3Ex 89 vs S14 87) — review with map content.
 
-## 5. patchstring.tbl — 83 deferred value conflicts
+## 5. patchstring.tbl — skill conflicts PORTED
 
-See `docs/patchstring_merge.md`. S14 values kept for consistency with S14 data rows.
-Includes the mod's mastery rename (General Mastery / Polearm And Spear Mastery) and awakened-summon
-strings (`ExtraGolem` etc.) — review together with the corresponding Skills/ItemStatCost rows:
-the mod's mastery REWORK rows (Skills.txt 128/134) were also not ported (S14 rows kept).
+See `docs/patchstring_merge.md`. The 61 skill, summon, mastery, and PvP values used by
+Reawakening's design were applied by `tools/port_reawakening_skills.py`. Unrelated S14
+strings remain unchanged. Both mastery reworks are active on their original skill rows.
 
 ## 6. CubeMain label collisions — 332 rows
 

@@ -93,7 +93,7 @@ extra_shadow_warrior	90		1	5													1024		6		5																		240	9	2	You
 item_req_percent	91		1	8											26	-34	1024		8	100	8	100																	0	4	2	ModStr3h	ModStr3h									8	100		8	100		0
 item_levelreq	92																1024		6	20	7																															7			7			0
 item_fasterattackrate	93	1	1	9											1042	156	1024		7	20	8	100												1					145	4	1	ModStr4m	ModStr4m									7	20		8	100		0
-item_levelreqpct	94																1024		7	20	7	64			13			item_levelreq																								7	64		7	64		0
+awakened	94			10	10										54	204	1024		8	0	10	0	10																246	3	0	StrAwakened	StrAwakened									10	0	10	10	0	10	0
 lastblockframe	95																1024		6	20																																						0
 item_fastermovevelocity	96	1	1	9											4083	156	1024		7	20	8	100																	148	4	1	ModStr4s	ModStr4s									7	20		8	100		0
 item_nonclassskill	97		1	8	9						1			1	181	327	1024		7	20	7	0	9																152	28												6	0	9	7	0	9	0
@@ -480,7 +480,7 @@ transform_dye	477		1	5													1024		5	0	5	0																														24
 inc_splash_radius	478		1	5													1024		6		5																		159	3	0	IncSplash	IncSplash									5			5			0
 item_numsockets_textonly	479		1	4													1024		4	0	4	0																	1	3		SocketedTextOnly	SocketedTextOnly									4	0		4	0		0
 rathma_clout	480			3											54	204	1024		8	0	3	0																	255	3	0	RathmaClout	RathmaClout									3	0		3	0		0
-awakened	481			10	10										54	204	1024		8	0	10	0	10																246	3	0	StrAwakened	StrAwakened									10	0	10	10	0	10	0
+extra_holybolts	481		1	5													1024		5		5																															5			5			0
 pvp_cd	482		1	5													1024		5		5																															5			5			0
 dragonflightreduction	483		1	5													1024		6		6																		159	3	0	dragonflightreduction	dragonflightreduction									6			6			0
 item_dmgpercent_pereth	484		1	6													1024		6	0	6	0			4	0	equipped_eth	item_maxdamage_percent	item_mindamage_percent					1					158	8	1	ModStrEnhancedDamage	ModStrEnhancedDamage	increaseswithequippedeth								6	0		6	0		0

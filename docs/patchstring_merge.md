@@ -2,12 +2,11 @@
 
 - Result: 3731 entries, NumLoops=3290
 - 453 mod-only keys appended (new idx 3278..3730)
-- 83 mod value variants NOT applied (S14 wins in Stage 1 for consistency with S14 data rows).
-  Includes the mod's mastery rename (General Mastery / Polearm And Spear Mastery) and
-  awakened-summon strings (ExtraGolem etc.) - review together with the corresponding
-  Skills/ItemStatCost data in Stage 2.
+- Stage 1 deferred 83 mod value variants. Stage 2 applied the 61 skill, summon, mastery,
+  and PvP values required by Reawakening's design; unrelated S14 strings remain unchanged.
+- The list below is the historical Stage 1 report, not the current state of those 61 keys.
 
-## Deferred conflicts (mod value NOT applied)
+## Historical Stage 1 deferred conflicts
 
 - `x`
   - S14 (kept): 'No equipped items need repairing'

@@ -1,4 +1,4 @@
-# Reawakening — PD2 Season 14 port (Stage 1 + TC drop boosts done)
+# Reawakening — PD2 Season 14 port (skills, TC drop boosts, and content)
 
 An AI-assisted port of [pd2-reawakening](https://github.com/synpoox/pd2-reawakening) (built for PD2 S11)
 onto the PD2 Season 14 "Alliance" data. The game boots, characters enter the world, and the mod's
@@ -16,7 +16,9 @@ Sources:
 - Mod S11 data: extracted from the installed modded `pd2data.mpq` (v11.0.1)
 
 Merge rules (tools in `tools/`):
-1. **S14 rows win all collisions** — any row present in both datasets stays S14-verbatim.
+1. **S14 is the base; intentional Reawakening edits are replayed** — `tools/port_reawakening_skills.py`
+   derives edited cells from Reawakening's Git history and applies their final S11 values to shared
+   skill, descriptor, missile, summon, MonProp, and PetType rows. Untouched S14 cells stay verbatim.
 2. **Mod-only rows are appended**, with values remapped by *name* where they reference skills
    (skill IDs shifted between S11 and S14; 36 params remapped, 0 misses).
 3. **ItemStatCost** (the table you warned about): both files sit at the 511-row cap. The 41 mod-only
@@ -26,9 +28,8 @@ Merge rules (tools in `tools/`):
    (fresh characters required; S12+ save-format changes broke old saves anyway).
 4. **patchstring.tbl**: format fully reverse-engineered (ELF-hash linear probing, NumLoops =
    max probe distance + 1, CRC16-CCITT over the string pool). S14 entries keep their original idx
-   values; 453 mod-only keys appended; 83 value conflicts deferred (S14 wins, see
-   `docs/patchstring_merge.md` — includes the mastery rename and awakened-summon strings, which must
-   be reviewed together with their data rows).
+   values; 453 mod-only keys appended. The 61 skill/summon/mastery/PvP conflicts needed by
+   Reawakening use the mod values; unrelated conflicts stay S14 (see `docs/patchstring_merge.md`).
 5. 26 mod-only .dc6 item graphics copied verbatim.
 
 ## Bugs found & fixed (this is the hard-won knowledge)
@@ -54,9 +55,9 @@ See `docs/stage2_deferred.md` for the full list with recovery methods. Headlines
   scalars are all ported (84 TC rows). Skipped per scope decision: boss/uber TC rows
   (including the mod's 10× key-drop boost and `bet`/`fed`→`dcso` material swap) and the
   outdated S11 map-tier pools — all recoverable if wanted.
-- **Mastery rework**: your mod *replaced* skills 128/134 (One/Two-Hand Mastery → General Mastery /
-  Polearm & Spear Mastery). The name-keyed merge treated the renames as *new* skills (now 614/615);
-  S14's originals are still at 128/134. To restore the rework, replace those rows deliberately.
+- **Skill design and mastery rework**: ✅ DONE — intentional shared-row edits, custom item-stat
+  formulas, summon behavior, projectiles, descriptors, and both Barbarian mastery replacements are
+  active. Every class remains at 36 skills to avoid the earlier save-alignment corruption.
 - **Density variants** (1x/2x/5x/10x): S14 base density currently; variants should be regenerated
   from S14 values using the per-row multipliers in your variant mpqs.
 - 332 CubeMain label collisions kept as S14 (`docs/cubemain_conflicts.md`).
@@ -101,6 +102,5 @@ re-downloads the S11 files per its manifest), and don't let the official PD2Laun
 ## For the author
 
 Everything above is reproducible from the scripts in `tools/` and the docs in `docs/`.
-The fastest way for you to polish: review `docs/stage2_deferred.md` (your intent vs S14's
-evolution, item by item), and decide the mastery-rework question. The scaffolding (merge,
-integrity check, integrity-clean tbl writer) will re-apply cleanly on top of any decisions you make.
+Run `python ../reawakening-s14/tools/port_reawakening_skills.py --check` from `scout/` to verify
+the skill port. Review `docs/stage2_deferred.md` for the remaining non-skill work.

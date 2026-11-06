@@ -43,5 +43,5 @@ S14 vanilla order preserved; mod stats occupy reclaimed dead rows.
 | 313 | item_ac_vs_monster | awakened_skill_duration |
 | 314 | item_ac_percent_vs_monster | unmaking_num |
 | 324 | item_extra_charges | jeweller_num |
-| 481 | extra_holybolts | awakened |
+| 94 | item_levelreqpct | awakened |
 | 487 | item_dmgpercent_permissinghppercent | awakener |

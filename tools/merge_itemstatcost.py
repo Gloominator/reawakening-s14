@@ -68,7 +68,7 @@ RECLAIM_S14_ROWS = [
     305, 306, 307, 308,             # item_pierce_* (classic padding; real pierce uses passive_*_pierce)
     309, 310, 311, 312, 313, 314,   # item_*_vs_monster (classic padding)
     324,  # item_extra_charges      (classic padding)
-    481,  # extra_holybolts         (PD2, property-driven)
+    94,   # item_levelreqpct        (unused, property/op-evaluated only)
     487,  # item_dmgpercent_permissinghppercent (PD2, property-driven)
 ]
 both_unused = set(json.load(open('stat_usage.json'))['both_unused'])
@@ -118,7 +118,7 @@ with open(OUT, 'w', encoding='latin1', newline='') as f:
         f.write(line + '\r\n')
 
 os.makedirs(os.path.dirname(DOC), exist_ok=True)
-with open(DOC, 'w', encoding='utf-8') as f:
+with open(DOC, 'w', encoding='utf-8', newline='\n') as f:
     f.write('# ItemStatCost merge mapping (S14 base + Reawakening stats)\n\n')
     f.write('S14 vanilla order preserved; mod stats occupy reclaimed dead rows.\n\n')
     f.write('| row | removed (dead S14 stat) | inserted mod stat |\n|---|---|---|\n')
