@@ -66,11 +66,12 @@ See `docs/stage2_deferred.md` for the full list with recovery methods. Headlines
 
 ```
 C:\Diablo II - Lord of Destruction\
-├─ reawakening-s14\        ← THIS REPO (merged data tree + tools + docs)
+├─ reawakening-s14\        ← THIS REPO (merged data tree + tools + docs + S14 BH)
 ├─ ProjectD2\
 │  ├─ data\                ← merged data on disk (the game reads this)
 │  ├─ PlugY.ini            ← Param=-3dfx -plugy -direct -txt
-│  ├─ BH.dll               ← your BH v11.0.1 (under test on the S14 client)
+│  ├─ BH.dll               ← S14 BH (copied from this repo's bin/BH.dll)
+│  ├─ loot.filter          ← local Hiim Mystery filter + Reawakening rules (not tracked)
 │  ├─ pd2data.mpq          ← vanilla S14 (fallback only; disk data wins)
 │  └─ *.backup / *.before-s14mod-* ← originals
 └─ scout\                  ← tooling workspace (mpq extractor, both extracted datasets,
@@ -79,6 +80,16 @@ C:\Diablo II - Lord of Destruction\
 
 Launch with `ProjectD2\PlugY.exe` directly. **Do not** click Play in the ra-launcher (it
 re-downloads the S11 files per its manifest), and don't let the official PD2Launcher "repair".
+
+### BH and loot filter
+
+`bin/BH.dll` is the bundled S14 build from `ProjectD2/Live/BH.dll`. It supports the formulas,
+sound effects, quiver conditions, and other filter features missing from Reawakening's S11 BH.
+The old installed DLL is preserved as `ProjectD2/BH.dll.before-s14bh-upgrade`.
+
+S14 BH does not implement Reawakening's custom `CARD` keyword. The installed filter therefore uses
+an `RA_CARDS` alias listing all 60 fate-card item codes. Launcher filter selection is cleared so BH
+loads `ProjectD2/loot.filter`; the filter itself is deliberately not tracked in this repository.
 
 ### Editing workflow
 
@@ -91,9 +102,6 @@ re-downloads the S11 files per its manifest), and don't let the official PD2Laun
 
 ## Known open items
 
-- **BH.dll** is your S11 build running on the S14 client. `D2Game.dll` is byte-identical between
-  S11 and S14, so hooks have a good chance; if anything's broken, rebuild from your BH source
-  (his commits: awakened asterisk indicators, awakened proc tooltips, CARD filter keyword).
 - **MPQ packaging**: a minimal MPQ writer was built (`tools/mpq_write.py`, read-back verified)
   but Storm.dll rejects the result ("file data is corrupt"). Currently unnecessary (txt mode),
   but packaging would restore the original distribution format + faster boot.
