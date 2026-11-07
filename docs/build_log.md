@@ -1,5 +1,17 @@
 # Build log
 
+## 2026-11-07 — Cube condition stat IDs remapped
+
+- `CubeMain.txt` still referenced the S11 numeric IDs for three relocated RA ItemStatCost rows,
+  preventing awakening and other stat-gated cube recipes from matching.
+- Remapped `awakener` conditions from 509 to 487 (311 rows), `unmaking_num` from 303 to 314
+  (6 rows), and `jeweller_num` from 304 to 324 (49 rows). Output properties use names and were
+  already correct.
+- Static validation passed: 3046 rows, 105 columns per row, cp1252/CRLF preserved, and all 171
+  awakening recipes now use stat 487. General integrity output remains at the pre-existing 1269 issues.
+- RA's custom red/orange affix markers are in its BH build. The port currently uses native S14 BH;
+  RA-specific tooltip marker support requires a BH source port and is not fixed by this data edit.
+
 ## 2026-11-05 — Stage 1 build installed
 
 - `ProjectD2/pd2data.mpq` = merged S14+mod build (sha256 614e05d9..., 212 files incl. listfile,

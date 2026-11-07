@@ -208,7 +208,24 @@ Turn in N copies of a named fate card for a reward (each is its own recipe):
 - *([disabled]) Lo/Sur + 50 jewels + coin → 10 Divine/Mythic orbs*
 - *([disabled]) LPP/Coin exchanges (puzzle box, Vex, Mal, catalyst shards, Lillith's Mirror, Vial of Lightsong)*
 
-## 17. Relics
+## 17. Eternal Coin disenchanting (quality-based)
+
+- **Unique-quality item + 1 key → 1 Eternal Coin (`ncoi`)** (`any,uni` + `key,qty=1`)
+- **Set-quality item + 1 key → 1 Eternal Coin** (`any,set` + `key,qty=1`)
+- **5 Eternal Coins → 1 Vial of Awakening (`dvia`)** (one `ncoi,qty=5` input)
+
+The recipes match *item quality*, not item tables: any unique or set item qualifies,
+including RA-added uniques, replicas, legacy items, unique jewels, all unique charms,
+quivers, and unique maps / special (trophy/dev) unique items. Normal, magic, rare, or
+crafted versions of a base that has a unique variant do **not** match. Ethereal,
+socketed, corrupted, awakened, or mirrored items still disenchant.
+
+Disenchanting destroys the item **and any socket contents** — it is irreversible.
+
+*Status: statically validated (row format, duplicate, and reference checks); in-game
+acceptance tests pending. See `docs/eternal_coin_disenchanting_plan.md`.*
+
+## 18. Relics
 
 **Relic of the Nephalem (`rotf`)** — 1 relic → random legacy item: 08 Shako, 08 Arkaine's,
 Armageddon Slippers, King's Jewel of Blazing, Storm Circlet, 08 Vgaze, Siggard's Stealth,
@@ -221,7 +238,7 @@ Aidans Scar, Hadriels Hand, Band of Skulls, Cage of the Unsullied, The Third Eye
 **Relic of the False Prophet (`rofp`)** — 1 relic → random replica item (~100 outcomes:
 Replica Templar's Might, Tyrael's Might, Steel Carapace, Leviathan, … Replica Armageddon's Blade).
 
-## 18. Endgame / portal access
+## 19. Endgame / portal access
 
 - 10 Zod + 1 Coin → Vial of Lightsong
 - 50 `dcbl` + 50 jewel fragments + 1 Coin → Pandemonium Talisman

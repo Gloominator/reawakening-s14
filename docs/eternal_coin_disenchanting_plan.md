@@ -2,7 +2,19 @@
 
 ## Status
 
-Planning only. Do not implement until this plan is approved.
+Implemented 2026-11-07 (approved by user request). The three recipes were appended to
+`data/global/excel/CubeMain.txt` (byte-append only; cp1252/CRLF preserved; 3 046 data
+rows), all static checks in step 3 passed (105-column format, exact cell values, no
+duplicates, `key`/`ncoi`/`dvia` resolve in `Misc.txt`, integrity checker shows no new
+issues vs. baseline), and `docs/ra_cube_recipes.md` §17 documents the feature.
+
+Deployed: the edited file was copied to `ProjectD2/data/global/excel/CubeMain.txt`
+(byte-verified) and the old `cubemain.bin` was deleted so the game recompiles from text.
+
+**Not yet done:** the in-game acceptance tests below (sections A–G) have not been
+performed. Do not treat the feature as verified end-to-end until they pass.
+Launch `ProjectD2/PlugY.exe` directly (not the RA launcher) with a disposable
+character and run tests A–G.
 
 ## Feasibility
 
