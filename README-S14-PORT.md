@@ -83,9 +83,12 @@ re-downloads the S11 files per its manifest), and don't let the official PD2Laun
 
 ### BH and loot filter
 
-`bin/BH.dll` is the bundled S14 build from `ProjectD2/Live/BH.dll`. It supports the formulas,
-sound effects, quiver conditions, and other filter features missing from Reawakening's S11 BH.
-The old installed DLL is preserved as `ProjectD2/BH.dll.before-s14bh-upgrade`.
+`bin/BH.dll` is built from native S14 BH source at upstream commit `66acd03d`, with Reawakening's
+orange awakening markers and its property hooks restored so native red corruption markers also run.
+It retains S14's formulas, sound effects, quiver conditions, and other filter features missing from
+Reawakening's S11 BH. The pristine native DLL remains in `ProjectD2/Live/BH.dll`; the DLL replaced by
+this custom build is preserved as `ProjectD2/BH.dll.before-ra-affix-markers`. The older RA DLL is
+preserved as `ProjectD2/BH.dll.before-s14bh-upgrade`. Modified BH is for single-player only.
 
 S14 BH does not implement Reawakening's custom `CARD` keyword. The installed filter therefore uses
 an `RA_CARDS` alias listing all 60 fate-card item codes. Launcher filter selection is cleared so BH

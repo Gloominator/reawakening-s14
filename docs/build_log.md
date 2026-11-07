@@ -1,5 +1,24 @@
 # Build log
 
+## 2026-11-07 — BH awakening/corruption affix markers
+
+- Built `bin/BH.dll` from `scout/BH-s14-src` local commit `318ee00` (native upstream base
+  `66acd03d6d073ec378fed014c4d8269b3ddcc603`, plus local RA marker changes).
+- Ported RA's 91-entry awakening table and orange `*` handling. Remapped `awakened` to stat 94,
+  `awakener` to 487, and `item_skillonequip_display` to 88; the other 63 awakening constants were
+  audited against S14 and remain unchanged. Kept native S14's newer 91-entry corruption table.
+- Restored the normal and damage property hooks that call `BHOnPropertyBuild`; native S14 had
+  disabled these hooks when exporting the functions, leaving both red corruption and RA awakening
+  markers without an active call path in this install. The separate advanced-properties hook stays
+  disabled.
+- Built optimized Release/Win32 with portable MSVC 14.44.35207 and Windows SDK 10.0.26100.0.
+  `dumpbin` confirmed PE32 x86 and all 10 native exports. No post-build deployment command ran.
+- Installed SHA-256 `90a885f24211fc9e4a1c7857b606ee130f538a78c41698c9523da5a20e0f0392`
+  (1,405,440 bytes) to `ProjectD2/BH.dll` and `bin/BH.dll`. Previous native DLL backed up as
+  `ProjectD2/BH.dll.before-ra-affix-markers`; `ProjectD2/Live/BH.dll` remains pristine.
+- In-game tooltip verification is still required: awakened affixes should show orange/yellow `*`,
+  corruption affixes red `*`, and native loot-filter behavior should remain functional.
+
 ## 2026-11-07 — Cube condition stat IDs remapped
 
 - `CubeMain.txt` still referenced the S11 numeric IDs for three relocated RA ItemStatCost rows,
@@ -9,8 +28,8 @@
   already correct.
 - Static validation passed: 3046 rows, 105 columns per row, cp1252/CRLF preserved, and all 171
   awakening recipes now use stat 487. General integrity output remains at the pre-existing 1269 issues.
-- RA's custom red/orange affix markers are in its BH build. The port currently uses native S14 BH;
-  RA-specific tooltip marker support requires a BH source port and is not fixed by this data edit.
+- Affix markers required the separate BH source change documented above; this data edit alone did
+  not change tooltip markers.
 
 ## 2026-11-05 — Stage 1 build installed
 
