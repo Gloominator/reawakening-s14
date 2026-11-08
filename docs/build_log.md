@@ -1,5 +1,24 @@
 # Build log
 
+## 2026-11-08 — Full-tooltip affix markers (awaiting in-game verification)
+
+- Source commit `5914c5d` in `scout/BH-s14-src`, separate from verified baseline `b06cd64`.
+- Added `AppendAffixMarkers` to `BHOnProperties`, independent of the range-display setting.
+  Match exact normalized localized labels, including grouped labels; add orange awakening,
+  red corruption, and legacy gold markers. Preserve active color and skip existing same-color stars.
+- Run after range injection and ignore bracketed range text during label matching. Supports
+  numberless properties such as Cannot Be Frozen; bounds-check the full tooltip insertion.
+- Fixed `StatIsAwakened` to check all eight entries in each awakening row instead of only six.
+- Build succeeded with all 10 exports; isolated marker tests passed for colors, range coexistence,
+  same-number isolation, repeated calls, grouped labels, numberless properties, unaffected items,
+  and buffer-capacity guard. In-game verification is still required.
+- Installed `bin/BH.dll`: 1,416,704 bytes; SHA-256
+  `5c3b751fad0eee999ba6fe0c66b08548429a0f30ea8e892ede53b4795ba6a73d`.
+- Source delta is `tools/bh-affix-markers.patch`, applied after `tools/bh-tooltip-fix.patch`.
+- Rollback: close the game and copy `bin/BH.verified-ranges.dll` to `ProjectD2/BH.dll`.
+  This is the user-confirmed range/color baseline (SHA-256 `66db42a6...`), also preserved in
+  commit `ca1e84a` and `ProjectD2/BH.dll.verified-ranges-b06cd64`. No push requested.
+
 ## 2026-11-08 — User-confirmed full-tooltip stat ranges and color fix
 
 - Saved BH source baseline as local `scout/BH-s14-src` commit `b06cd64`.

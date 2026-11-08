@@ -1,0 +1,107 @@
+diff --git a/BH/Modules/Item/Item.cpp b/BH/Modules/Item/Item.cpp
+index 1472349..f98760e 100644
+--- a/BH/Modules/Item/Item.cpp
++++ b/BH/Modules/Item/Item.cpp
+@@ -1511,7 +1511,7 @@ static std::wstring StatRangeLabel(const wchar_t* text, size_t length)
+ 	return result;
+ }
+ 
+-static bool StatRangeLineMatches(WORD statId, const wchar_t* line, size_t length)
++static bool StatRangeLineMatches(WORD statId, const wchar_t* line, size_t length, bool exact = false)
+ {
+ 	auto* table = *p_D2COMMON_sgptDataTable;
+ 	if (statId >= table->dwItemStatCostRecs) { return false; }
+@@ -1524,11 +1524,75 @@ static bool StatRangeLineMatches(WORD statId, const wchar_t* line, size_t length
+ 		const wchar_t* text = GetTblEntryByIndex(id, TBLOFFSET_STRING);
+ 		if (!text) { continue; }
+ 		std::wstring label = StatRangeLabel(text, wcslen(text));
+-		if (label.size() >= 4 && actual.find(label) != std::wstring::npos) { return true; }
++		if (label.size() >= 4 && (exact ? actual == label : actual.find(label) != std::wstring::npos)) { return true; }
+ 	}
+ 	return false;
+ }
+ 
++static void AppendAffixMarkers(UnitAny* pItem, wchar_t* wTxt)
++{
++	if (!pItem || !pItem->pItemData || !wTxt) { return; }
++	int awakened = ItemGetAwakener(pItem);
++	int corrupted = ItemGetCorruptor(pItem, STAT_CORRUPTED);
++	int legacy = ItemGetCorruptor(pItem, STAT_UNUSED205);
++	if (awakened < 0 && corrupted < 0 && legacy < 0) { return; }
++
++	auto* table = *p_D2COMMON_sgptDataTable;
++	const std::wstring colors[] = { GetColorCode(TextColor::Gold), GetColorCode(TextColor::Red), GetColorCode(TextColor::Orange) };
++	for (size_t start = 0; wTxt[start]; )
++	{
++		size_t end = start;
++		while (wTxt[end] && wTxt[end] != L'\n') { ++end; }
++		size_t labelEnd = end;
++		bool excluded = false;
++		bool present[3] = {};
++		for (size_t k = start; k < end; ++k)
++		{
++			if (wTxt[k] == 0xFF && k + 2 < end && wTxt[k + 1] == L'c')
++			{
++				for (int c = 0; c < 3; ++c)
++				{
++					if (k + 3 < end && wTxt[k + 2] == colors[c][2] && wTxt[k + 3] == L'*') { present[c] = true; }
++				}
++				k += 2;
++				continue;
++			}
++			if (wTxt[k] == L':' || wTxt[k] == L'\r') { excluded = true; }
++			if (wTxt[k] == L'[' && labelEnd == end) { labelEnd = k; }
++		}
++		bool marked[3] = {};
++		if (!excluded)
++		{
++			for (DWORD stat = 0; stat < table->dwItemStatCostRecs; ++stat)
++			{
++				bool candidate[] = { StatIsCorrupted(stat, legacy) != FALSE, StatIsCorrupted(stat, corrupted) != FALSE, StatIsAwakened(stat, awakened) != FALSE };
++				if (!candidate[0] && !candidate[1] && !candidate[2]) { continue; }
++				// Exact labels keep "Damage Reduced" distinct from "Magic Damage Reduced".
++				if (!StatRangeLineMatches((WORD)stat, wTxt + start, labelEnd - start, true)) { continue; }
++				for (int c = 0; c < 3; ++c) { marked[c] = marked[c] || candidate[c]; }
++			}
++		}
++		std::wstring resume = GetColorCode(TextColor::Blue);
++		for (size_t k = end; k >= 3; --k)
++		{
++			if (wTxt[k - 3] == 0xFF && wTxt[k - 2] == L'c') { resume.assign(wTxt + k - 3, 3); break; }
++		}
++		std::wstring suffix;
++		for (int c = 0; c < 3; ++c)
++		{
++			if (marked[c] && !present[c]) { suffix += colors[c] + L"*" + resume; }
++		}
++		size_t total = wcslen(wTxt);
++		if (!suffix.empty() && total + suffix.size() < ITEM_TEXT_SIZE_LIMIT)
++		{
++			memmove(wTxt + end + suffix.size(), wTxt + end, (total - end + 1) * sizeof(wchar_t));
++			wmemcpy(wTxt + end, suffix.c_str(), suffix.size());
++			end += suffix.size();
++		}
++		start = wTxt[end] ? end + 1 : end;
++	}
++}
++
+ // Full-tooltip fallback for stats that never reach BHOnPropertyBuild.
+ static void AppendStatRanges(UnitAny* pItem, wchar_t* wTxt)
+ {
+@@ -2366,6 +2430,7 @@ __declspec(dllexport)void __stdcall BHOnProperties(wchar_t* wTxt)
+ 	{
+ 		AppendStatRanges(pItem, wTxt);
+ 	}
++	AppendAffixMarkers(pItem, wTxt);
+ }
+ 
+ __declspec(dllexport) BOOL __stdcall BHOnDamagePropertyBuild(UnitAny* pItem, DamageStats* pDmgStats, int nStat, wchar_t* wOut) {
+@@ -3492,7 +3557,7 @@ BOOL StatIsAwakened(int nStat, int nAwakener)
+ 	if (nAwakener < 0 || nAwakener > NUM_AWAKENS)
+ 		return false;
+ 
+-	for (int j = 0; j < 6; j++) {
++	for (int j = 0; j < 8; j++) {
+ 		if (AwakenMods[nAwakener][j] < 0) {
+ 			continue;
+ 		}
