@@ -1,0 +1,669 @@
+diff --git a/BH/BH.cpp b/BH/BH.cpp
+index 479b140..4f8829d 100644
+--- a/BH/BH.cpp
++++ b/BH/BH.cpp
+@@ -45,7 +45,6 @@ Patch* BH::oogDraw = new Patch(Call, D2WIN, { 0x18911, 0xEC61 }, (int)OOGDraw_In
+ unsigned int index = 0;
+ bool BH::Startup(HINSTANCE instance, VOID* reserved)
+ {
+-
+ 	BH::instance = instance;
+ 	if (reserved != NULL)
+ 	{
+@@ -357,12 +356,22 @@ extern "C" {
+ 			bSave = TRUE;
+ 			break;
+ 		case BH_CONFIG_SHOWITEMLEVEL:
+-			App.lootfilter.showIlvl.value = configVal;
+-			bSave = TRUE;
++			// PD2 forces this off at startup via BHSetConfig. Honour only the "on" request so
++			// the feature stays enabled instead of being silently disabled every session.
++			if (configVal)
++			{
++				App.lootfilter.showIlvl.value = configVal;
++				bSave = TRUE;
++			}
+ 			break;
+ 		case BH_CONFIG_ALWAYSSHOWSTATRANGE:
+-			App.lootfilter.alwaysShowStatRanges.value = configVal;
+-			bSave = TRUE;
++			// Same as above: PD2 resets this to 0 during a session, which is what made stat
++			// ranges disappear while ED%/elemental damage (a separate code path) kept working.
++			if (configVal)
++			{
++				App.lootfilter.alwaysShowStatRanges.value = configVal;
++				bSave = TRUE;
++			}
+ 			break;
+ 		case BH_CONFIG_ALWAYSSHOWITEMS:
+ 			App.game.alwaysShowItems.value = configVal;
+diff --git a/BH/BH.h b/BH/BH.h
+index 377a4e8..2855849 100644
+--- a/BH/BH.h
++++ b/BH/BH.h
+@@ -107,12 +107,12 @@ struct BHApp
+ 		SettingsKey filterLevelDecrease = { 0, 0 };
+ 		SettingsKey filterLevelPrevious = { 0, 0 };
+ 		SettingsBool enableFilter = { true, true };
+-		SettingsBool showIlvl = { false, false };
++		SettingsBool showIlvl = { true, true };	// item levels shown by default; PD2 resets this via BHSetConfig
+ 		SettingsInt detailedNotifications = { 1, 1, 0, 2 };	// 0: Off, 1: On, 2: Only "new"
+ 		SettingsToggle allowUnknownItems = { {}, {0, false} };
+ 		SettingsInt showStatRangesPrimary = { 0, 0, 0x08, 0xE0 };
+ 		SettingsInt showStatRangesSecondary = { 0, 0, 0x08, 0xE0 };
+-		SettingsBool alwaysShowStatRanges = { false, false };
++		SettingsBool alwaysShowStatRanges = { true, true };	// PD2 resets this via BHSetConfig; see the guard there
+ 		SettingsAssoc classSkillsList = {}; // TODO??
+ 		SettingsAssoc tabSkillsList = {};  // TODO??
+ 		SettingsBool dropSounds = { true, true };
+diff --git a/BH/Config.cpp b/BH/Config.cpp
+index 7e09d69..5422785 100644
+--- a/BH/Config.cpp
++++ b/BH/Config.cpp
+@@ -372,10 +372,13 @@ void Config::LoadConfig()
+ 	App.lootfilter.filterLevelDecrease.hotkey = GetKey("/lootfilter"_json_pointer, "filter_level_decrease", App.lootfilter.filterLevelDecrease);
+ 	App.lootfilter.filterLevelPrevious.hotkey = GetKey("/lootfilter"_json_pointer, "filter_level_previous", App.lootfilter.filterLevelPrevious);
+ 	App.lootfilter.enableFilter.value = GetBool("/lootfilter"_json_pointer, "advanced_item_display", App.lootfilter.enableFilter);
+-	App.lootfilter.showIlvl.value = GetBool("/lootfilter"_json_pointer, "show_iLvl", App.lootfilter.showIlvl);
++	// Force these on regardless of what the JSON or PD2 says. PD2 calls BHSetConfig with 0 for
++	// both during startup, and the JSON may hold a stale 0 from a previous session, which silently
++	// disabled item levels and stat ranges. The defaults in BH.h are true as well.
++	App.lootfilter.showIlvl.value = true;
++	App.lootfilter.alwaysShowStatRanges.value = true;
+ 	App.lootfilter.detailedNotifications.value = GetInt("/lootfilter"_json_pointer, "detailed_notifications", App.lootfilter.detailedNotifications);
+ 	App.lootfilter.allowUnknownItems.toggle = GetToggle("/lootfilter"_json_pointer, "allow_unknown_items", App.lootfilter.allowUnknownItems);
+-	App.lootfilter.alwaysShowStatRanges.value = GetBool("/lootfilter"_json_pointer, "always_show_stat_ranges", App.lootfilter.alwaysShowStatRanges);
+ 	App.lootfilter.dropSounds.value = GetBool("/lootfilter"_json_pointer, "drop_sounds", App.lootfilter.dropSounds);
+ 	App.lootfilter.hideHealingPotions.value = GetBool("/lootfilter"_json_pointer, "hide_healing_potions", App.lootfilter.hideHealingPotions);
+ 	App.lootfilter.hideManaPotions.value = GetBool("/lootfilter"_json_pointer, "hide_mana_potions", App.lootfilter.hideManaPotions);
+diff --git a/BH/Modules/Item/Item.cpp b/BH/Modules/Item/Item.cpp
+index de2288e..1472349 100644
+--- a/BH/Modules/Item/Item.cpp
++++ b/BH/Modules/Item/Item.cpp
+@@ -52,6 +52,7 @@
+ #include "ItemDisplay.h"
+ #include "../../lrucache.hpp"
+ #include "../GameSettings/GameSettings.h"
++#include <cstdio>
+ 
+ ItemsTxtStat* GetAllStatModifier(ItemsTxtStat* pStats, int nStats, int nStat, ItemsTxtStat* pOrigin);
+ ItemsTxtStat* GetMaxElemStatFromMin(ItemsTxtStat* pStats, int nStats, int nStat, ItemsTxtStat* pOrigin);
+@@ -107,7 +108,7 @@ std::map<int, int> weponSpeedToTblIndex = {
+ UnitAny* Item::viewingUnit;
+ 
+ Patch* itemNamePatch = new Patch(Call, D2CLIENT, { 0x92366, 0x96736 }, (int)ItemName_Interception, 6);
+-//Patch* itemPropertiesPatch = new Patch(Jump, D2CLIENT, { 0x5612C, 0x2E3FC }, (int)GetProperties_Interception, 6);
++Patch* itemPropertiesPatch = new Patch(Jump, D2CLIENT, { 0x5612C, 0x2E3FC }, (int)GetProperties_Interception, 6);
+ Patch* itemPropertyStringDamagePatch = new Patch(Call, D2CLIENT, { 0x55D7B, 0x2E04B }, (int)GetItemPropertyStringDamage_Interception, 5);
+ Patch* itemPropertyStringPatch = new Patch(Call, D2CLIENT, { 0x55D9D, 0x2E06D }, (int)GetItemPropertyString_Interception, 5);
+ Patch* viewInvPatch1 = new Patch(Call, D2CLIENT, { 0x953E2, 0x997B2 }, (int)ViewInventoryPatch1_ASM, 6);
+@@ -152,6 +153,7 @@ void Item::OnLoad() {
+ 	putInContainerIntercept->Install();
+ 
+ 	//itemPropertiesPatch->Install();
++	itemPropertiesPatch->Install();
+ 	itemPropertyStringDamagePatch->Install();
+ 	itemPropertyStringPatch->Install();
+ 
+@@ -784,8 +786,8 @@ void Item::ChangeFilterLevels(int newLevel) {
+ void Item::OnUnload() {
+ 	itemNamePatch->Remove();
+ 	//itemPropertiesPatch->Remove();
+-	itemPropertyStringDamagePatch->Remove();
+-	itemPropertyStringPatch->Remove();
++	//itemPropertyStringDamagePatch->Remove();
++	//itemPropertyStringPatch->Remove();
+ 	viewInvPatch1->Remove();
+ 	viewInvPatch2->Remove();
+ 	viewInvPatch3->Remove();
+@@ -1488,6 +1490,262 @@ static DWORD previousFlags;
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
++// Match localized stat labels as well as values: unrelated stats can have identical rolls.
++static std::wstring StatRangeLabel(const wchar_t* text, size_t length)
++{
++	std::wstring result;
++	for (size_t i = 0; i < length && text[i]; ++i)
++	{
++		if (text[i] == 0xFF && i + 2 < length && text[i + 1] == L'c') { i += 2; continue; }
++		if (text[i] == L'%')
++		{
++			size_t end = i + 1;
++			while (end < length && (text[end] == L'+' || text[end] == L'-' || text[end] == L'.' || (text[end] >= L'0' && text[end] <= L'9'))) { ++end; }
++			if (end < length && (text[end] == L'd' || text[end] == L's' || text[end] == L'u')) { i = end; }
++			continue;
++		}
++		wchar_t c = text[i];
++		if (c >= L'A' && c <= L'Z') { c += L'a' - L'A'; }
++		if ((c >= L'a' && c <= L'z') || c > 0xFF) { result += c; }
++	}
++	return result;
++}
++
++static bool StatRangeLineMatches(WORD statId, const wchar_t* line, size_t length)
++{
++	auto* table = *p_D2COMMON_sgptDataTable;
++	if (statId >= table->dwItemStatCostRecs) { return false; }
++	const ItemStatCostTxt& cost = table->pItemStatCostTxt[statId];
++	WORD labels[] = { cost.wDescStrPos, cost.wDescStrNeg, cost.wDGrpStrPos, cost.wDGrpStrNeg };
++	std::wstring actual = StatRangeLabel(line, length);
++	for (WORD id : labels)
++	{
++		if (!id || id == 0xFFFF) { continue; }
++		const wchar_t* text = GetTblEntryByIndex(id, TBLOFFSET_STRING);
++		if (!text) { continue; }
++		std::wstring label = StatRangeLabel(text, wcslen(text));
++		if (label.size() >= 4 && actual.find(label) != std::wstring::npos) { return true; }
++	}
++	return false;
++}
++
++// Full-tooltip fallback for stats that never reach BHOnPropertyBuild.
++static void AppendStatRanges(UnitAny* pItem, wchar_t* wTxt)
++{
++	if (!pItem || !pItem->pItemData || !wTxt) { return; }
++
++	ItemsTxtStat* pStats = nullptr;
++	int nStats = 0;
++	std::vector<ItemsTxtStat> affixStats;
++
++	switch (pItem->pItemData->dwQuality)
++	{
++	case ITEM_QUALITY_SET:
++	{
++		SetItemsTxt* pTxt = &(*p_D2COMMON_sgptDataTable)->pSetItemsTxt[pItem->pItemData->dwFileIndex];
++		if (pTxt) { pStats = pTxt->hStats; nStats = 19; }
++		break;
++	}
++	case ITEM_QUALITY_UNIQUE:
++	{
++		UniqueItemsTxt* pTxt = &(*p_D2COMMON_sgptDataTable)->pUniqueItemsTxt[pItem->pItemData->dwFileIndex];
++		if (pTxt) { pStats = pTxt->hStats; nStats = 12; }
++		break;
++	}
++	case ITEM_QUALITY_MAGIC:
++	case ITEM_QUALITY_RARE:
++	case ITEM_QUALITY_CRAFT:
++	{
++		WORD ids[] = { pItem->pItemData->wPrefix[0], pItem->pItemData->wPrefix[1], pItem->pItemData->wPrefix[2],
++			pItem->pItemData->wSuffix[0], pItem->pItemData->wSuffix[1], pItem->pItemData->wSuffix[2], pItem->pItemData->wAutoPrefix };
++		for (WORD id : ids)
++		{
++			if (!id || id == 0xFFFF) { continue; }
++			AutoMagicTxt* affix = D2COMMON_GetItemMagicalMods(id);
++			if (!affix) { continue; }
++			for (const ItemsTxtStat& mod : affix->hMods)
++			{
++				if (mod.dwProp == 0xFFFFFFFF) { break; }
++				affixStats.push_back(mod);
++			}
++		}
++		if (!affixStats.empty()) { pStats = affixStats.data(); nStats = (int)affixStats.size(); }
++		break;
++	}
++	default:
++		if (pItem->pItemData->dwFlags & ITEM_RUNEWORD)
++		{
++			RunesTxt* pTxt = GetRunewordTxtById(pItem->pItemData->wPrefix[0]);
++			if (pTxt) { pStats = pTxt->hStats; nStats = 7; }
++		}
++		break;
++	}
++
++	if (pStats == nullptr) { return; }
++
++	// DIAG: record what this item offered, once per quality, so a silent no-op is visible.
++	{
++		static bool seenQ[16] = {};
++		int q = (int)pItem->pItemData->dwQuality;
++		if (q >= 0 && q < 16 && !seenQ[q]) {
++			seenQ[q] = true;
++			FILE* t = nullptr;
++			if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_ranges.log", "a") == 0) {
++				fprintf(t, "CALL quality=%d nStats=%d |", q, nStats);
++				for (int i = 0; i < nStats; ++i) {
++					if (pStats[i].dwProp == 0xffffffff) break;
++					fprintf(t, " [%d prop=%u par=%u min=%d max=%d]", i, pStats[i].dwProp, pStats[i].dwPar, pStats[i].dwMin, pStats[i].dwMax);
++				}
++				fprintf(t, "\n");
++				fclose(t);
++			}
++		}
++	}
++
++	// Copy the colour codes into locals: GetColorCode() returns a temporary, so holding c_str()
++	// from it across the loop below would be a dangling pointer.
++	std::wstring darkGreenStr = GetColorCode(TextColor::DarkGreen);
++	std::wstring defaultColor = GetColorCode(TextColor::Blue);
++	const wchar_t* darkGreen = darkGreenStr.c_str();
++
++	for (int i = 0; i < nStats; ++i)
++	{
++		if (pStats[i].dwProp == 0xffffffff || pStats[i].dwProp >= (*p_D2COMMON_sgptDataTable)->dwProportiesRecs) { continue; }
++
++		// Fixed values have nothing to show - "[6 - 6]" is only noise.
++		if (pStats[i].dwMin >= pStats[i].dwMax) { continue; }
++
++		PropertiesTxt* pProp = &(*p_D2COMMON_sgptDataTable)->pPropertiesTxt[pStats[i].dwProp];
++		if (pProp == nullptr) { break; }
++
++		// Use the first stat of the property; that is the one that produces the displayed text.
++		// Functions 15/16 are the elemental min/max pair, already handled by the damage callback.
++		for (int j = 0; j < 7; ++j)
++		{
++			WORD statId = pProp->wStat[j];
++			if (statId == 0xFFFF) { break; }
++			if (pProp->nFunc[j] == 15 || pProp->nFunc[j] == 16) { continue; }
++
++			int rolled = (int)D2COMMON_GetUnitStat(pItem, statId, (int)pStats[i].dwPar);
++
++			// DIAG: per-stat lookup result, once per (quality, prop). This is what tells us whether a
++			// missing range is "stat read as 0" or "number not found in the text".
++			{
++				static bool seenS[16][64] = {};
++				int q = (int)pItem->pItemData->dwQuality;
++				if (q >= 0 && q < 16 && i >= 0 && i < 64 && !seenS[q][i]) {
++					seenS[q][i] = true;
++					FILE* t = nullptr;
++					if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_ranges.log", "a") == 0) {
++						fprintf(t, "LOOK q=%d i=%d prop=%u par=%u min=%d max=%d statId=%u func=%u rolled=%d\n",
++							q, i, pStats[i].dwProp, pStats[i].dwPar, pStats[i].dwMin, pStats[i].dwMax,
++							statId, pProp->nFunc[j], rolled);
++						fclose(t);
++					}
++				}
++			}
++
++			if (statId == STAT_MAXHP || statId == STAT_MAXMANA) { rolled /= 256; }
++			if (statId == STAT_ENHANCEDDEFENSE || statId == STAT_ENHANCEDMAXIMUMDAMAGE || statId == STAT_ENHANCEDMINIMUMDAMAGE)
++			{
++				StatList* list = D2COMMON_GetStatList(pItem, NULL, 0x40);
++				if (list) { rolled = D2COMMON_GetStatValueFromStatList(list, statId, 0); }
++			}
++			if (rolled == 0) { continue; }
++
++			wchar_t valStr[24];
++			swprintf_s(valStr, 24, L"%d", rolled);
++			size_t valLen = wcslen(valStr);
++
++			// Locate the property line that owns this value, then append the range at the END of that
++			// line. Appending at the end rather than straight after the digits matters for stats
++			// written like "39% Extra Gold" - inserting after the digits would split the number from
++			// its percent sign and leave "39 [37 - 67]% Extra Gold".
++			//
++			// Candidate rejection rules, each one fixing a bug seen in game:
++			//  * a match inside a colour code. Codes are the triple { 0xFF, 'c', X } and X is often a
++			//    digit, so searching for "8" matches the '8' inside "orange". Injecting there splits
++			//    the code and recolours the rest of the tooltip.
++			//  * lines containing ':' or '('. Those are the header and the upgrade-recipe block
++			//    (Defense, iLVL, "Requires: Lvl 50", "Socketed (2)"), all full of numbers.
++			//  * lines containing " + " or " * " with spaces on both sides, which only the recipe
++			//    separator uses ("This Item + Ko + Lem + Perf 6"). Real properties are written as
++			//    "+21" with no space after the sign.
++			//  * lines already carrying '[' so nothing is annotated twice.
++			wchar_t* targetLineEnd = nullptr;
++			// Search from the start of the text on every property, not from a moving cursor.
++			// The tooltip does not list properties in stat-table order (and awakened/corrupted stats
++			// are appended at the end), so a forward-only cursor silently skipped any property that
++			// appeared earlier in the text than in the table - that is why only some lines of an
++			// item ever got a range. The "already annotated" check below prevents double-insertion.
++			for (wchar_t* scan = wTxt; (scan = wcsstr(scan, valStr)) != nullptr; ++scan)
++			{
++				if (scan >= wTxt + 3 && scan[-3] == 0xFF && scan[-2] == L'c') { continue; }
++				if (scan >= wTxt + 2 && scan[-2] == 0xFF && scan[-1] == L'c') { continue; }
++				if (scan >= wTxt + 1 && scan[-1] == 0xFF) { continue; }
++
++				wchar_t before = (scan == wTxt) ? L'\0' : scan[-1];
++				if (before >= L'0' && before <= L'9') { continue; }
++
++				wchar_t after = scan[valLen];
++				if (after >= L'0' && after <= L'9') { continue; }
++
++				wchar_t* lineStart = scan;
++				while (lineStart > wTxt && lineStart[-1] != L'\n') { --lineStart; }
++				wchar_t* lineStop = wcschr(scan, L'\n');
++				size_t thisLineLen = lineStop ? (size_t)(lineStop - lineStart) : wcslen(lineStart);
++
++				bool unusable = false;
++				for (size_t k = 0; k < thisLineLen; ++k)
++				{
++					wchar_t c = lineStart[k];
++					if (c == L'[' || c == L':' || c == L'(' || c == L')') { unusable = true; break; }
++					if (c == L'+' || c == L'*')
++					{
++						bool spBefore = (k > 0 && lineStart[k - 1] == L' ');
++						bool spAfter = (k + 1 < thisLineLen && lineStart[k + 1] == L' ');
++						if (spBefore && spAfter) { unusable = true; break; }
++					}
++				}
++				if (unusable || !StatRangeLineMatches(statId, lineStart, thisLineLen)) { continue; }
++
++				targetLineEnd = lineStop ? lineStop : (lineStart + thisLineLen);
++				break;
++			}
++			if (targetLineEnd == nullptr) { continue; }
++
++			size_t pos = (size_t)(targetLineEnd - wTxt);
++
++			// Restore the colour that was active on this line, rather than forcing white. Forcing
++			// white is what recoloured every affix after the annotated line - the tooltip relies on
++			// colour codes persisting across newlines.
++			std::wstring resume;
++			for (size_t k = pos; k >= 3; --k)
++			{
++				if (wTxt[k - 3] == 0xFF && wTxt[k - 2] == L'c')
++				{
++					resume.assign(wTxt + k - 3, 3);
++					break;
++				}
++			}
++			if (resume.empty()) { resume = defaultColor; }
++
++			wchar_t rangeStr[64];
++			swprintf_s(rangeStr, 64, L" %s[%d - %d]%s", darkGreen, pStats[i].dwMin, pStats[i].dwMax, resume.c_str());
++			size_t rangeLen = wcslen(rangeStr);
++
++			size_t restLen = wcslen(wTxt + pos);
++			if ((pos + rangeLen + restLen) >= ITEM_TEXT_SIZE_LIMIT) { break; }
++
++			memmove(wTxt + pos + rangeLen, wTxt + pos, (restLen + 1) * sizeof(wchar_t));
++			wmemcpy(wTxt + pos, rangeStr, rangeLen);
++
++			break;
++		}
++	}
++}
++
++
+ __declspec(dllexport)void __stdcall BHOnProperties(wchar_t* wTxt)
+ {
+ 	UnitAny* pItem = *p_D2CLIENT_SelectedInvItem;
+@@ -2072,17 +2330,19 @@ __declspec(dllexport)void __stdcall BHOnProperties(wchar_t* wTxt)
+ 
+ 		// Items with enhanced def mod will spawn with base def as max +1.
+ 		// Don't show range if item spawned with edef and hasn't been upgraded.
+-		//if (!spawned_with_ed) {
+-		//	swprintf_s(wTxt + aLen, 1024 - aLen,
+-		//			L"%sBase Defense: %d %s[%d - %d]%s%s\n",
+-		//			GetColorCode(TextColor::White).c_str(),
+-		//			base,
+-		//			GetColorCode(TextColor::DarkGreen).c_str(),
+-		//			min, max_no_ed,
+-		//			ebugged ? L"\377c5 Ebug" : L"",
+-		//			GetColorCode(TextColor::White).c_str()
+-		//			);
+-		//}
++		if (!spawned_with_ed) {
++			if (aLen < ITEM_TEXT_SIZE_LIMIT) {
++				swprintf_s(wTxt + aLen, ITEM_TEXT_SIZE_LIMIT - aLen,
++					L"%sBase Defense: %d %s[%d - %d]%s%s\n",
++					GetColorCode(TextColor::White).c_str(),
++					base,
++					GetColorCode(TextColor::DarkGreen).c_str(),
++					min, max_no_ed,
++					ebugged ? L"\377c5 Ebug" : L"",
++					GetColorCode(TextColor::White).c_str()
++				);
++			}
++		}
+ 	}
+ 
+ 	if (App.lootfilter.showIlvl.value && ShouldShowIlvl(&uInfo))
+@@ -2101,6 +2361,11 @@ __declspec(dllexport)void __stdcall BHOnProperties(wchar_t* wTxt)
+ 			swprintf_s(wTxt + aLen, ITEM_TEXT_SIZE_LIMIT - aLen, ilvlString);
+ 		}
+ 	}
++
++	if (App.lootfilter.alwaysShowStatRanges.value)
++	{
++		AppendStatRanges(pItem, wTxt);
++	}
+ }
+ 
+ __declspec(dllexport) BOOL __stdcall BHOnDamagePropertyBuild(UnitAny* pItem, DamageStats* pDmgStats, int nStat, wchar_t* wOut) {
+@@ -2293,9 +2558,48 @@ __declspec(dllexport) void __stdcall BHOnPropertyBuild(wchar_t* wOut, int nStat,
+ 		GetKeyState(App.lootfilter.showStatRangesSecondary.value) & 0x8000) ||
+ 		pItem == nullptr || pItem->dwType != UNIT_ITEM)
+ 	{
++		// DIAG-RANGE: log each distinct stat ONCE (never truncated by call count), plus every
++		// change of the alwaysRanges flag. Records why the gate failed.
++		{
++			static bool seen[512] = {};
++			static int lastAlways = -1;
++			int curAlways = App.lootfilter.alwaysShowStatRanges.value ? 1 : 0;
++			bool wantLog = (curAlways != lastAlways);
++			if (nStat >= 0 && nStat < 512 && !seen[nStat]) { seen[nStat] = true; wantLog = true; }
++			if (wantLog) {
++				lastAlways = curAlways;
++				FILE* t = nullptr;
++				if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_range.log", "a") == 0) {
++					fprintf(t, "GATE-REJECT stat=%d quality=%u alwaysRanges=%d compendium=%d key1=%d key2=%d vk1=%d vk2=%d\n",
++						nStat, pItem && pItem->pItemData ? pItem->pItemData->dwQuality : 0,
++						curAlways,
++						(pItem && pItem->pItemData && (pItem->pItemData->dwFlags & ITEMFLAG_FAKE_COMPENDIUM_TAB)) ? 1 : 0,
++						(GetKeyState(App.lootfilter.showStatRangesPrimary.value) & 0x8000) ? 1 : 0,
++						(GetKeyState(App.lootfilter.showStatRangesSecondary.value) & 0x8000) ? 1 : 0,
++						App.lootfilter.showStatRangesPrimary.value,
++						App.lootfilter.showStatRangesSecondary.value);
++					fclose(t);
++				}
++			}
++		}
+ 		return;
+ 	}
+ 
++	// DIAG-RANGE: gate passed - record each distinct stat once.
++	{
++		static bool seenPass[512] = {};
++		if (nStat >= 0 && nStat < 512 && !seenPass[nStat]) {
++			seenPass[nStat] = true;
++			FILE* t = nullptr;
++			if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_range.log", "a") == 0) {
++				fprintf(t, "GATE-PASS stat=%d quality=%u alwaysRanges=%d\n",
++					nStat, pItem && pItem->pItemData ? pItem->pItemData->dwQuality : 0,
++					App.lootfilter.alwaysShowStatRanges.value ? 1 : 0);
++				fclose(t);
++			}
++		}
++	}
++
+ 	ItemsTxtStat* stat = nullptr;
+ 	ItemsTxtStat* all_stat = nullptr; // Stat for common modifer like all-res, all-stats
+ 	ItemsTxtStat* max_elem_stat = nullptr; // Stat for ranged min/max stats
+@@ -2323,6 +2627,36 @@ __declspec(dllexport) void __stdcall BHOnPropertyBuild(wchar_t* wOut, int nStat,
+ 			}
+ 			stat = GetItemsTxtStatByMod(pTxt->hStats, 12, nStat, nStatParam);
+ 
++			// DIAG-RANGE: for uniques, record lookup outcome once per stat id, including the raw
++			// prop table on a miss. This is the data needed to tell "not found" from "found, no range".
++			{
++				static bool seenU[512] = {};
++				if (nStat >= 0 && nStat < 512 && !seenU[nStat]) {
++					seenU[nStat] = true;
++					FILE* t = nullptr;
++					if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_range.log", "a") == 0) {
++						fprintf(t, "UNIQUE stat=%d param=%d text=%ls found=%d",
++							nStat, nStatParam, wOut ? wOut : L"<null>", stat ? 1 : 0);
++						if (stat) {
++							fprintf(t, " prop=%u par=%u min=%d max=%d", stat->dwProp, stat->dwPar, stat->dwMin, stat->dwMax);
++						}
++						else {
++							fprintf(t, " | props:");
++							for (int k = 0; k < 12; ++k) {
++								if (pTxt->hStats[k].dwProp == 0xffffffff) break;
++								PropertiesTxt* dp = &(*p_D2COMMON_sgptDataTable)->pPropertiesTxt[pTxt->hStats[k].dwProp];
++								fprintf(t, " [%d prop=%u par=%u min=%d max=%d s0=%u f0=%u]",
++									k, pTxt->hStats[k].dwProp, pTxt->hStats[k].dwPar,
++									pTxt->hStats[k].dwMin, pTxt->hStats[k].dwMax,
++									dp->wStat[0], dp->nFunc[0]);
++							}
++						}
++						fprintf(t, "\n");
++						fclose(t);
++					}
++				}
++			}
++
+ 			if (stat != nullptr) {
+ 				all_stat = GetAllStatModifier(pTxt->hStats, 12, nStat, stat);
+ 			}
+@@ -2475,6 +2809,26 @@ __declspec(dllexport) void __stdcall BHOnPropertyBuild(wchar_t* wOut, int nStat,
+ 				int	aLen = wcslen(wOut);
+ 				int leftSpace = 128 - aLen > 0 ? 128 - aLen : 0;
+ 
++				// DIAG-WRITE: log what this append is about to do, and the buffer state before it.
++				// If leftSpace==0 the append below is skipped entirely - that is the suspected bug,
++				// since the real buffer is 1024 wchar_t but this gate assumes 128.
++				{
++					static bool seenW[512] = {};
++					if (nStat >= 0 && nStat < 512 && !seenW[nStat]) {
++						seenW[nStat] = true;
++						FILE* t = nullptr;
++						if (fopen_s(&t, "C:\\Diablo II - Lord of Destruction\\ProjectD2\\pd2logs\\bh_write.log", "a") == 0) {
++							fprintf(t, "WRITE stat=%d quality=%u statMin=%d statMax=%d maxElem=%d | aLen=%d leftSpace=%d | wOutBefore=%ls\n",
++								nStat,
++								pItem && pItem->pItemData ? pItem->pItemData->dwQuality : 0,
++								statMin, statMax, max_elem_stat ? 1 : 0,
++								aLen, leftSpace,
++								wOut ? wOut : L"<null>");
++							fclose(t);
++						}
++					}
++				}
++
+ 				if (nStat >= STAT_DEFENSEPERLEVEL && nStat <= STAT_FINDGEMSPERLEVEL)
+ 				{
+ 					//statMin = D2COMMON_GetBaseStatSigned(D2CLIENT_GetPlayerUnit(), STAT_LEVEL, 0) * statMin >> 3;
+@@ -2901,11 +3255,18 @@ __declspec(dllexport) void __stdcall BHOnPropertyBuild(wchar_t* wOut, int nStat,
+ */
+ ItemsTxtStat* GetItemsTxtStatByMod(ItemsTxtStat* pStats, int nStats, int nStat, int nStatParam)
+ {
++	// A prop that matched by stat ID but failed the param comparison. Needed because several
++	// props (notably res-all, which packs four resist stats under one prop) have an empty `par`
++	// column that does not compare equal to nStatParam. Without this fallback those stats never
++	// resolve, so their ranges are silently dropped.
++	ItemsTxtStat* paramFallback = nullptr;
++
+ 	if (nStat == STAT_SKILLONKILL || nStat == STAT_SKILLONHIT || nStat == STAT_SKILLONSTRIKING || nStat == STAT_SKILLONDEATH ||
+ 		nStat == STAT_SKILLONLEVELUP || nStat == STAT_SKILLWHENSTRUCK || nStat == STAT_CHARGED)
+ 	{
+ 		return nullptr;
+ 	}
++
+ 	for (int i = 0; i < nStats; ++i) {
+ 		try {
+ 			IsBadReadPtr(pStats, sizeof(ItemsTxtStat));
+@@ -2953,9 +3314,20 @@ ItemsTxtStat* GetItemsTxtStatByMod(ItemsTxtStat* pStats, int nStats, int nStat,
+ 					return &pStats[i];
+ 				}
+ 			}
++			// Same stat ID, but the param comparison failed. Remember it and fall back after the
++			// full scan. Restricted to unparameterised props so genuinely param-distinguished
++			// stats (single resists, skill tabs, ...) still resolve to their exact prop.
++			if (pProp->wStat[j] == nStat && pProp->nFunc[j] != 15 && pProp->nFunc[j] != 16 &&
++				nStatParam == 0 &&
++				(pStats[i].dwPar == 0xFFFFFFFF || pStats[i].dwPar == 0))
++			{
++				if (paramFallback == nullptr) {
++					paramFallback = &pStats[i];
++				}
++			}
+ 		}
+ 	}
+-	return nullptr;
++	return paramFallback;
+ }
+ 
+ /*
+@@ -3059,19 +3431,36 @@ ItemsTxtStat* GetMaxElemStatFromMin(ItemsTxtStat* pStats, int nStats, int nStat,
+ 	return nullptr;
+ }
+ 
+-int ItemGetCorruptor(UnitAny* pItem, int nStat)
++static bool ItemGetRawStat(UnitAny* pItem, int nStat, DWORD* value)
+ {
+-	int corruptor = -1;
++	if (pItem == nullptr || pItem->pStats == nullptr)
++		return false;
+ 
+ 	for (int i = 0; i < pItem->pStats->wSetStatCount; i++) {
+ 		Stat* pStat = &pItem->pStats->pSetStat[i];
+ 		if (pStat->wStatIndex == nStat) {
+-			corruptor = pStat->dwStatValue - 2;
+-			break;
++			*value = pStat->dwStatValue;
++			return true;
++		}
++	}
++
++	for (int i = 0; i < pItem->pStats->wStatCount1; i++) {
++		Stat* pStat = &pItem->pStats->pStat[i];
++		if (pStat->wStatIndex == nStat) {
++			*value = pStat->dwStatValue;
++			return true;
+ 		}
+ 	}
+ 
+-	return corruptor;
++	return false;
++}
++
++int ItemGetCorruptor(UnitAny* pItem, int nStat)
++{
++	DWORD value;
++	if (!ItemGetRawStat(pItem, nStat, &value))
++		return -1;
++	return value - 2;
+ }
+ 
+ BOOL StatIsCorrupted(int nStat, int nCorruptor)
+@@ -3092,17 +3481,10 @@ BOOL StatIsCorrupted(int nStat, int nCorruptor)
+ 
+ int ItemGetAwakener(UnitAny* pItem)
+ {
+-	int awakener = -1;
+-
+-	for (int i = 0; i < pItem->pStats->wSetStatCount; i++) {
+-		Stat* pStat = &pItem->pStats->pSetStat[i];
+-		if (pStat->wStatIndex == STAT_AWAKENED) {
+-			awakener = pStat->dwStatValue;
+-			break;
+-		}
+-	}
+-
+-	return awakener;
++	DWORD value;
++	if (!ItemGetRawStat(pItem, STAT_AWAKENED, &value))
++		return -1;
++	return value;
+ }
+ 
+ BOOL StatIsAwakened(int nStat, int nAwakener)
+@@ -3196,16 +3578,16 @@ void __declspec(naked) ItemName_Interception()
+ }
+ 
+ 
+-//__declspec(naked) void __fastcall GetProperties_Interception()	// 3rd ItemProp func
+-//{
+-//	__asm
+-//	{
+-//		push eax
+-//		call Item::OnProperties
+-//		add esp, 0x808
+-//		ret 12
+-//	}
+-//}
++__declspec(naked) void __fastcall GetProperties_Interception()	// 3rd ItemProp func
++{
++	__asm
++	{
++		push eax
++		call BHOnProperties
++		add esp, 0x808
++		ret 12
++	}
++}
+ 
+ /*	Wrapper over D2CLIENT.0x2E04B (1.13d)
+ 	BOOL __userpurge ITEMS_BuildDamagePropertyDesc@<eax>(DamageStats *pStats@<eax>, int nStat, wchar_t *wOut)

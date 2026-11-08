@@ -84,7 +84,12 @@ re-downloads the S11 files per its manifest), and don't let the official PD2Laun
 ### BH and loot filter
 
 `bin/BH.dll` is built from native S14 BH source at upstream commit `66acd03d`, with Reawakening's
-orange awakening markers and its property hooks restored so native red corruption markers also run.
+marker code and restored tooltip hooks. The confirmed range/color baseline is local BH source commit
+`b06cd64`; `tools/bh-tooltip-fix.patch` captures its changes against marker commit `318ee00`.
+Full-tooltip stat ranges now support unique/set/runeword properties and actual magic/rare affixes,
+match localized labels to avoid same-number mixups, and preserve the original affix colors.
+**Awakening/corruption asterisks remain an open issue:** most non-damage stats bypass their existing
+per-property callback. Hook restoration alone did not fix these markers.
 It retains S14's formulas, sound effects, quiver conditions, and other filter features missing from
 Reawakening's S11 BH. The pristine native DLL remains in `ProjectD2/Live/BH.dll`; the DLL replaced by
 this custom build is preserved as `ProjectD2/BH.dll.before-ra-affix-markers`. The older RA DLL is

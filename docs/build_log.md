@@ -1,5 +1,26 @@
 # Build log
 
+## 2026-11-08 — User-confirmed full-tooltip stat ranges and color fix
+
+- Saved BH source baseline as local `scout/BH-s14-src` commit `b06cd64`.
+- Added `AppendStatRanges` in `BHOnProperties`, because most non-damage stats never reach
+  `BHOnPropertyBuild` in this install. Covers unique/set/runeword properties and actual
+  magic/rare prefix/suffix records (crafted affix records too, not recipe bonuses).
+- Match localized stat labels as well as rolled values so Goblin Toe's magic damage reduction
+  cannot attach its range to awakened MPK with the same number. Append ranges at line ends.
+- Restore the active color with a character-by-character scan; the former three-character stride
+  missed color codes and incorrectly reset blue affixes to white. Handle life/mana scaling and
+  read enhanced defense from the item stat list.
+- Keep item level and stat ranges enabled despite PD2's configuration reset calls.
+- Build succeeded, all 10 exports verified; 11 isolated label tests and 40 color-alignment tests
+  passed. User confirmed the installed fix works in game.
+- `bin/BH.dll`: 1,414,656 bytes, SHA-256
+  `66db42a67a9b97faa20afc13139c2fd7cd0b6f907f1afd5f316cd13ee88429a0`.
+- `tools/bh-tooltip-fix.patch` records source changes against local BH marker commit `318ee00`.
+  Diagnostic logging remains in this confirmed baseline; filters are deliberately not tracked.
+- Awakening/corruption asterisks remain unresolved in this baseline. Their current code is still
+  in `BHOnPropertyBuild`, the callback bypassed by most non-damage tooltip lines.
+
 ## 2026-11-08 — Restore the item tooltip hook (`BHOnProperties`)
 
 - Re-enabled `itemPropertiesPatch` in `scout/BH-s14-src`. Upstream `c867a7f9` ("A few function
