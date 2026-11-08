@@ -88,9 +88,9 @@ marker code and restored tooltip hooks. The confirmed range/color baseline is lo
 `b06cd64`; `tools/bh-tooltip-fix.patch` captures its changes against marker commit `318ee00`.
 Full-tooltip stat ranges now support unique/set/runeword properties and actual magic/rare affixes,
 match localized labels to avoid same-number mixups, and preserve the original affix colors.
-The current marker candidate (BH source commit `5914c5d`, delta `tools/bh-affix-markers.patch`)
+The user-confirmed marker build (BH source commit `5914c5d`, delta `tools/bh-affix-markers.patch`)
 adds awakening/corruption stars in the full-tooltip callback because most non-damage stats bypass
-its per-property counterpart. This candidate passed isolated tests but still needs in-game verification.
+its per-property counterpart. It passed isolated tests and the user confirmed it works in game.
 `bin/BH.verified-ranges.dll` preserves the user-confirmed range/color build: close the game and copy
 it to `ProjectD2/BH.dll` to roll back without changing source or losing either local Git commit.
 It retains S14's formulas, sound effects, quiver conditions, and other filter features missing from

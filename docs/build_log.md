@@ -1,6 +1,6 @@
 # Build log
 
-## 2026-11-08 — Full-tooltip affix markers (awaiting in-game verification)
+## 2026-11-08 — Full-tooltip affix markers (user-confirmed working)
 
 - Source commit `5914c5d` in `scout/BH-s14-src`, separate from verified baseline `b06cd64`.
 - Added `AppendAffixMarkers` to `BHOnProperties`, independent of the range-display setting.
@@ -11,7 +11,7 @@
 - Fixed `StatIsAwakened` to check all eight entries in each awakening row instead of only six.
 - Build succeeded with all 10 exports; isolated marker tests passed for colors, range coexistence,
   same-number isolation, repeated calls, grouped labels, numberless properties, unaffected items,
-  and buffer-capacity guard. In-game verification is still required.
+  and buffer-capacity guard. User tested the installed build in game and confirmed it works.
 - Installed `bin/BH.dll`: 1,416,704 bytes; SHA-256
   `5c3b751fad0eee999ba6fe0c66b08548429a0f30ea8e892ede53b4795ba6a73d`.
 - Source delta is `tools/bh-affix-markers.patch`, applied after `tools/bh-tooltip-fix.patch`.
