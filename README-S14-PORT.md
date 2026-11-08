@@ -90,9 +90,23 @@ Reawakening's S11 BH. The pristine native DLL remains in `ProjectD2/Live/BH.dll`
 this custom build is preserved as `ProjectD2/BH.dll.before-ra-affix-markers`. The older RA DLL is
 preserved as `ProjectD2/BH.dll.before-s14bh-upgrade`. Modified BH is for single-player only.
 
+The tooltip hook `itemPropertiesPatch` is explicitly enabled again. Upstream `c867a7f9` ("A few
+function exports") turned `Item::OnProperties` into the exported `BHOnProperties` but commented out
+both the patch and its `GetProperties_Interception` caller, so nothing ever called into it. That
+silently disabled item level display, affix level display, stat ranges and all filter description
+text (key tips included), because all of them are appended inside `BHOnProperties`. The
+`Base Defense: N [min - max]` output was independently commented out; it is restored with
+`ITEM_TEXT_SIZE_LIMIT` bounds. Both accidental regressions live in the same callback, so test any
+change to it in game.
+
 S14 BH does not implement Reawakening's custom `CARD` keyword. The installed filter therefore uses
-an `RA_CARDS` alias listing all 60 fate-card item codes. Launcher filter selection is cleared so BH
-loads `ProjectD2/loot.filter`; the filter itself is deliberately not tracked in this repository.
+an `RA_CARDS` alias listing all 60 fate-card item codes. (Do not "simplify" this to `ItemDisplay[CARD]`
+— an unknown keyword leaves the rule with no conditions, and a condition-less rule matches every item.)
+
+The live filter is `ProjectD2/filters/online/Kassahi_Mystery.filter`, selected through
+`ProjectD2/AppData/launcherSettings.json` (`SelectedAuthorAndFilter`), which BH reads in
+`BH::LoadLootFilter()` (`BH.cpp:218-219`). `ProjectD2/loot.filter` is only the fallback used when that
+selection fails to parse. Filters are deliberately not tracked in this repository.
 
 ### Editing workflow
 

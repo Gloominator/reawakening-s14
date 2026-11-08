@@ -1,5 +1,35 @@
 # Build log
 
+## 2026-11-08 — Restore the item tooltip hook (`BHOnProperties`)
+
+- Re-enabled `itemPropertiesPatch` in `scout/BH-s14-src`. Upstream `c867a7f9` ("A few function
+  exports", 2026-04-08) renamed `Item::OnProperties` to the exported `BHOnProperties` but commented
+  out both the patch (`BH/Modules/Item/Item.cpp:111`) and its `GetProperties_Interception` caller,
+  leaving the function exported with no active call path.
+- **Symptoms this fixed:** item level, affix level, `Base Defense: N [min - max]` stat ranges and all
+  loot-filter description text (including Kryszard/Hiim key map-reading tips) were dead in game. All
+  of them are appended inside `BHOnProperties`, so one missing caller disabled every one of them.
+  Proven with a temporary probe: `BHOnPropertyBuild` logged thousands of calls while
+  `BHOnProperties` never ran at all.
+- The `Base Defense` output was also independently commented out; restored with
+  `ITEM_TEXT_SIZE_LIMIT` bounds to match the rest of the file.
+- Confirmed the patch site before enabling: `D2Client.dll` RVA `0x5612C` holds
+  `81 C4 08 08 00 00 C2 0C 00` (`add esp,0x808; ret 12`), the expected epilogue, and the working
+  patches at `0x55D7B`/`0x55D9D` are `E8`, so the 1.13c offset set is the live one.
+- Note for future filter edits: the upstream README's `ItemDisplay[CARD]` does not work on S14 BH —
+  it has no `CARD` condition. An unknown keyword leaves a rule with **no conditions**, and a
+  condition-less rule matches every item, which makes the entire filter render raw junk. Use the
+  `RA_CARDS` alias (all 60 fate-card codes) instead.
+- Built optimized Release/Win32 with portable MSVC 14.44.35207 and Windows SDK 10.0.26100.0.
+  `dumpbin` confirmed PE32 x86 and all 10 native exports.
+- Installed SHA-256 `496d8b4faf55c8a89ad8955aa19768723dde92261be7913cc93612b623762ddd`
+  (1,410,560 bytes) to `ProjectD2/BH.dll` and `bin/BH.dll`. Prior DLL backed up as
+  `ProjectD2/BH.dll.before-diag`. Verified in game: item levels, affix levels and stat ranges show.
+- Note: `show_iLvl` and `always_show_stat_ranges` in `BH.json` are reverted to `false` by PD2 itself
+  during a session (`ProjectDiablo.dll` calls `BHSetConfig`), so editing that file does not stick.
+  The settings UI for them is also commented out upstream (`c00b234`), so they cannot be toggled
+  in game either.
+
 ## 2026-11-07 — BH awakening/corruption affix markers
 
 - Built `bin/BH.dll` from `scout/BH-s14-src` local commit `318ee00` (native upstream base
