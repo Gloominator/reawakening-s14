@@ -114,7 +114,17 @@ an `RA_CARDS` alias listing all 60 fate-card item codes. (Do not "simplify" this
 The live filter is `ProjectD2/filters/online/Kassahi_Mystery.filter`, selected through
 `ProjectD2/AppData/launcherSettings.json` (`SelectedAuthorAndFilter`), which BH reads in
 `BH::LoadLootFilter()` (`BH.cpp:218-219`). `ProjectD2/loot.filter` is only the fallback used when that
-selection fails to parse. Filters are deliberately not tracked in this repository.
+selection fails to parse. A snapshot of the current active local filter is now tracked at
+`filters/local/Hiim_Mystery_Kryszard.filter`; deploy it to the matching ProjectD2 path.
+The current launcher selection is this local filter, not the online Kassahi file above.
+
+### Natural-drop ordering fix (2026-11-09)
+
+RA treasure-class dependencies must precede their callers. The merged table is now
+reordered without changing weights or original S14 row order; both TC-editing tools
+apply `tools/fix_tc_order.py` automatically. This restores the intended orb/card/box
+drop paths. See `docs/ra_drop_order_fix.md` for validation and backup details.
+Gameplay acceptance testing is still pending.
 
 ### Editing workflow
 

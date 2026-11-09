@@ -266,6 +266,8 @@ def do_cube():
         if l.strip():
             assert len(l.split("\t")) == n, (len(l.split("\t")), n)
     write_txt(CUBE, lines, crlf)
+    from customize_boxes import apply_cube
+    apply_cube(CUBE)
     return enabled, clarified, appended
 
 
@@ -339,6 +341,10 @@ def do_tcex():
         if l.strip():
             assert len(l.split("\t")) == n, (len(l.split("\t")), n)
     write_txt(TCEX, lines, crlf)
+    from fix_tc_order import fix_file
+    fix_file(TCEX)
+    from customize_boxes import apply_tc
+    apply_tc(TCEX)
 
 
 def do_bins():
@@ -362,6 +368,8 @@ def do_tbl():
     bad, content_ok = verify(blob, pairs)
     assert bad == 0 and content_ok, (bad, content_ok)
     TBL.write_bytes(blob)
+    from customize_boxes import apply_strings
+    apply_strings(TBL)
     return hdr["keycount"], len(pairs), loops, len(blob)
 
 

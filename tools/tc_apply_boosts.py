@@ -229,6 +229,12 @@ if crlf:
 with open(PATH, 'wb') as f:
     f.write(out.encode('latin1'))
 
+from pathlib import Path
+from fix_tc_order import fix_file
+fix_file(Path(PATH))
+from customize_boxes import apply_tc
+apply_tc(Path(PATH))
+
 uniq = sorted(set(changed))
 print(f'changed rows: {len(changed)} edits across {len(uniq)} TCs')
 for r in report:
