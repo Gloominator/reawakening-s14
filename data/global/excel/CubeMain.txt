@@ -3046,14 +3046,14 @@ unique item + key -> eternal coin	1			100					2	any,uni	key,qty=1						ncoi,qty=
 set item + key -> eternal coin	1			100					2	any,set	key,qty=1						ncoi,qty=1																																																																																							0
 5 eternal coins -> vial of awakening	1			100					1	ncoi,qty=5							dvia,qty=1																																																																																							0
 SP+ GHEED'S CURIOUS BOX - PHASE 1 - ROLL	1	2		100	18	361	0		1	gcbx							useitem				corruptnum	100		1501	1515																																																																															0
-SP+ Gheed: Perfect Amethysts	1			100	16	361	1502		1	gcbx							gpvs,qty=50																																																																																							0
-SP+ Gheed: Perfect Topazes	1			100	16	361	1504		1	gcbx							gpys,qty=50																																																																																							0
-SP+ Gheed: Perfect Skulls	1			100	16	361	1506		1	gcbx							skzs,qty=50																																																																																							0
-SP+ Gheed: Perfect Rubies	1			100	16	361	1508		1	gcbx							gprs,qty=50																																																																																							0
-SP+ Gheed: Perfect Diamonds	1			100	16	361	1510		1	gcbx							gpws,qty=50																																																																																							0
-SP+ Gheed: Perfect Sapphires	1			100	16	361	1512		1	gcbx							gpbs,qty=50																																																																																							0
-SP+ Gheed: Perfect Emeralds	1			100	16	361	1514		1	gcbx							gpgs,qty=50																																																																																							0
-SP+ Gheed: Jewel Fragments	1			100	16	361	1515		1	gcbx							jewf,qty=50																																																																																							0
+SP+ Gheed: Perfect Amethysts	1			100	16	361	1502		1	gcbx							gpv,qty=20																																																																																							0
+SP+ Gheed: Perfect Topazes	1			100	16	361	1504		1	gcbx							gpy,qty=20																																																																																							0
+SP+ Gheed: Perfect Skulls	1			100	16	361	1506		1	gcbx							skz,qty=20																																																																																							0
+SP+ Gheed: Perfect Rubies	1			100	16	361	1508		1	gcbx							gpr,qty=20																																																																																							0
+SP+ Gheed: Perfect Diamonds	1			100	16	361	1510		1	gcbx							gpw,qty=20																																																																																							0
+SP+ Gheed: Perfect Sapphires	1			100	16	361	1512		1	gcbx							gpb,qty=20																																																																																							0
+SP+ Gheed: Perfect Emeralds	1			100	16	361	1514		1	gcbx							gpg,qty=20																																																																																							0
+SP+ Gheed: Jewel Fragments	1			100	16	361	1515		1	gcbx							jewf,qty=20																																																																																							0
 SP+ CHARSI'S CRAFTING BOX - PHASE 1 - ROLL	1	2		100	18	361	0		1	ccbx							useitem				corruptnum	100		0	506																																																																															0
 SP+ Charsi: Blood infusion	1			100	16	361	66		1	ccbx							crfb,qty=10																																																																																							0
 SP+ Charsi: Caster infusion	1			100	16	361	133		1	ccbx							crfc,qty=10																																																																																							0
@@ -3063,3 +3063,4 @@ SP+ Charsi: Vampiric infusion	1			100	16	361	334		1	ccbx							crfv,qty=10						
 SP+ Charsi: Bountiful infusion	1			100	16	361	401		1	ccbx							crfu,qty=10																																																																																							0
 SP+ Charsi: Prismatic infusion	1			100	16	361	468		1	ccbx							crfp,qty=10																																																																																							0
 SP+ Charsi: Catalyst shards	1			100	16	361	506		1	ccbx							iwss,qty=10																																																																																							0
+TEST - Gheed box: Lesser Healing Potion + Town Portal Scroll	1			100					2	hp1	tsc						gcbx																																																																																							0

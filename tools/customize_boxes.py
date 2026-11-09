@@ -5,6 +5,9 @@ from merge_patchstring import parse, build, verify
 
 ROOT = Path(__file__).resolve().parents[1]
 DESCRIPTION = b"Cube twice to receive 10 random crafting infusions or 10 catalyst shards."
+GHEED_DESCRIPTION = b"Cube twice to receive 20 random perfect gems or 20 jewel fragments."
+TEST_RECIPE = "TEST - Gheed box: Lesser Healing Potion + Town Portal Scroll"
+ENABLE_GHEED_TEST_RECIPE = True
 
 
 def edit_table(path, edit):
@@ -44,12 +47,34 @@ def apply_cube(path):
             assert code in {'crfb', 'crfc', 'crfs', 'crfh', 'crfv', 'crfu', 'crfp', 'iwss'}
             assert qty in {'5', '10'}
             row['output'] = code + ',qty=10'
+        if row['description'].startswith('SP+ Gheed:') and row['input 1'] == 'gcbx':
+            code, qty = row['output'].split(',qty=')
+            normal = {'gpvs': 'gpv', 'gpys': 'gpy', 'skzs': 'skz',
+                      'gprs': 'gpr', 'gpws': 'gpw', 'gpbs': 'gpb', 'gpgs': 'gpg'}
+            code = normal.get(code, code)
+            assert code in set(normal.values()) | {'jewf'}
+            assert qty in {'20', '50'}
+            row['output'] = code + ',qty=20'
+        if row['description'] == TEST_RECIPE:
+            row['enabled'] = '1' if ENABLE_GHEED_TEST_RECIPE else '0'
     edit_table(path, edit)
+    lines = path.read_bytes().decode('latin1').split('\r\n')
+    header = lines[0].split('\t')
+    if not any(line.split('\t', 1)[0] == TEST_RECIPE for line in lines[1:]):
+        row = {key: '' for key in header}
+        row.update({'description': TEST_RECIPE,
+                    'enabled': '1' if ENABLE_GHEED_TEST_RECIPE else '0',
+                    'version': '100', 'numinputs': '2', 'input 1': 'hp1',
+                    'input 2': 'tsc', 'output': 'gcbx', '*eol': '0'})
+        text = '\t'.join(row[key] for key in header)
+        lines.insert(len(lines) - 1 if lines[-1] == '' else len(lines), text)
+        path.write_bytes('\r\n'.join(lines).encode('latin1'))
 
 
 def apply_strings(path):
     _, _, entries = parse(str(path))
-    pairs = [(e['key'], DESCRIPTION if e['key'] == b'ccbxDesc' else e['val'])
+    descriptions = {b'ccbxDesc': DESCRIPTION, b'gcbxDesc': GHEED_DESCRIPTION}
+    pairs = [(e['key'], descriptions.get(e['key'], e['val']))
              for e in sorted(entries, key=lambda e: e['idx'])]
     assert sum(k == b'ccbxDesc' for k, _ in pairs) == 1
     blob, _ = build(pairs)

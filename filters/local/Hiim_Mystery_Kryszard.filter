@@ -10,6 +10,17 @@ ItemDisplayFilterName[]: ÿc1High roller
 ItemDisplayFilterName[]: ÿc13 Min Mapper
 ItemDisplayFilterName[]: ÿc1No Items Out of Town
 ItemDisplay[box]: %NAME%{Send Feedback via PD2 Discord #lootfilter%CL%Last updated November 6th%CL%Season 14 - build 185%CL%HiimFilter - Hyper - Mystery -}%CONTINUE%
+//Always show chipped/flawed gems with simple gem names at every filter level
+Alias[LOW_GEMS]: (gcv OR gcvs OR gfv OR gfvs OR gcy OR gcys OR gfy OR gfys OR gcb OR gcbs OR gfb OR gfbs OR gcg OR gcgs OR gfg OR gfgs OR gcr OR gcrs OR gfr OR gfrs OR gcw OR gcws OR gfw OR gfws OR skc OR skcs OR skf OR skfs)
+ItemDisplay[gcv OR gcvs OR gfv OR gfvs]: %PURPLE%Amethyst%CONTINUE%
+ItemDisplay[gcy OR gcys OR gfy OR gfys]: %YELLOW%Topaz%CONTINUE%
+ItemDisplay[gcb OR gcbs OR gfb OR gfbs]: %BLUE%Sapphire%CONTINUE%
+ItemDisplay[gcg OR gcgs OR gfg OR gfgs]: %GREEN%Emerald%CONTINUE%
+ItemDisplay[gcr OR gcrs OR gfr OR gfrs]: %RED%Ruby%CONTINUE%
+ItemDisplay[gcw OR gcws OR gfw OR gfws]: %WHITE%Diamond%CONTINUE%
+ItemDisplay[skc OR skcs OR skf OR skfs]: %CORAL%. %LIGHT_GRAY%Skull %CORAL%.%CONTINUE%
+ItemDisplay[LOW_GEMS QTY>1]: %NAME% x %QTY%
+ItemDisplay[LOW_GEMS]: %NAME%
 //PD2 Single Player Reawakening
 ItemDisplay[awst OR mfo OR exo OR dvo OR rgo OR cho OR tjo OR dvia OR gcbx OR ccbx]: %BORDER-0A%%DOT-62%%GREEN%*%PURPLE%*%RED%*       %NAME%       %RED%*%PURPLE%*%GREEN%*
 //RA coins, special bases and information items

@@ -126,6 +126,15 @@ apply `tools/fix_tc_order.py` automatically. This restores the intended orb/card
 drop paths. See `docs/ra_drop_order_fix.md` for validation and backup details.
 Gameplay acceptance testing is still pending.
 
+### Boss-drop restoration (2026-11-09)
+
+Selected S11 RA boss drops are now restored, including map-boss relic rolls,
+UberAncients/Mendeln RA picks, Uber Diablo/Rathma relic assignments, Hell act-boss
+Good weights and Uber Souls, and boosted keys. See `docs/boss_drops_restored.md`.
+For a full rebuild, run `python tools/restore_ra_boss_drops.py` LAST after the
+other TC-editing tools. Earlier statements that all boss rows remain deferred
+are historical and superseded by this restoration.
+
 ### Editing workflow
 
 1. Edit txt files in `reawakening-s14\data\` (programmatically or with a D2-safe editor only).

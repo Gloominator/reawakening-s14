@@ -4,12 +4,20 @@
 D2 resolves TC names while loading rows, not in a second pass. Only RA rows
 are moved; the relative order of every vanilla row (including TC groups) stays.
 """
+import csv
 from collections import Counter
 from pathlib import Path
 import argparse
 
 ROOT = Path(__file__).resolve().parents[1]
 RA_NAMES = set("""Orbs|Map Boss TC|Replica|Prime Evil Embers|Map Orbs Drop|Fate Common A|Fate Common B|Fate Common C|Map Boss Uber Relic|Fate Uncommon A|Fate Uncommon B|Fate Rare A|Fate Drop|Treasure Fallen Cards N|Treasure Fallen Cards NM|Treasure Fallen Cards H|Treasure Fallen Orbs N|Treasure Fallen Orbs NM|Treasure Fallen Orbs H|Uber Diablo Legacy|Uber Diablo Replica|Uber Diablo Void|Rathma Legacy|Rathma Replica|Rathma Void|Uber Diablo Relics|Rathma Relics|Boxes|Orbs (H)""".split("|"))
+
+RA_NAMES.update(f"RA Map Boss Main T{tier}" for tier in range(1, 4))
+# Item codes take precedence over TC names (e.g. lucc has both).
+ITEM_CODES = set()
+for filename in ("Misc.txt", "Weapons.txt", "Armor.txt"):
+    with (ROOT / "data/global/excel" / filename).open(encoding="latin1") as source:
+        ITEM_CODES.update(row["code"] for row in csv.DictReader(source, delimiter="\t"))
 
 
 def reorder(raw):
@@ -44,7 +52,7 @@ def reorder(raw):
             target = cells[column]
             if target in active:
                 emit(target)
-            elif name in active and target in rows and target not in emitted:
+            elif name in active and target in rows and target not in ITEM_CODES and target not in emitted:
                 raise ValueError(f"RA TC {name} needs unavailable vanilla TC {target}")
         visiting.remove(name)
         emitted.add(name)
