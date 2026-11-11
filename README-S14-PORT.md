@@ -118,6 +118,21 @@ selection fails to parse. A snapshot of the current active local filter is now t
 `filters/local/Hiim_Mystery_Kryszard.filter`; deploy it to the matching ProjectD2 path.
 The current launcher selection is this local filter, not the online Kassahi file above.
 
+### Item-granted summon fix (2026-11-11)
+
+The user-confirmed `bin/BH.dll` suppresses one version/signature-guarded PD2 periodic
+stat-487 check. The port repurposed that engine-read stat for RA's awakening marker;
+awakened equipment consequently triggered item-stat detach/reapply every second,
+reducing oskill skeleton counts and removing charged Poison Creepers. The fix keeps
+existing item/save stat IDs and summon formulas unchanged.
+
+**Single-player only:** deploy both `bin/BH.dll` and
+`bin/BH.ReawakeningSinglePlayer.enable` beside `ProjectD2/PlugY.exe`, with the game
+closed. The opt-in declares the entire process SP-only; it is not online detection.
+Without it, the compatibility patch stays disabled. Restart after deployment.
+See `docs/oskill_summon_investigation.md` for evidence, guards and rollback details;
+`tools/bh-oskill-refresh-fix.patch` preserves the BH source delta.
+
 ### Natural-drop ordering fix (2026-11-09)
 
 RA treasure-class dependencies must precede their callers. The merged table is now

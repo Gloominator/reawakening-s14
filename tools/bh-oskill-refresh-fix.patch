@@ -1,0 +1,167 @@
+diff --git a/BH/BH.cpp b/BH/BH.cpp
+index 4f8829d..bbe0f1e 100644
+--- a/BH/BH.cpp
++++ b/BH/BH.cpp
+@@ -9,6 +9,9 @@
+ #include "Modules.h"
+ #include "Task.h"
+ #include "Drawing/Stats/StatsDisplay.h"
++#include "ReawakeningCompat.h"
++
++static ReawakeningCompat::PeriodicRefreshPatch reawakeningPeriodicRefresh;
+ 
+ string BH::path;
+ HINSTANCE BH::instance;
+@@ -80,6 +83,7 @@ void BH::Initialize()
+ 	LoadLootFilter();
+ 	CheckForD2GL();
+ 	CheckForPD2();
++	reawakeningPeriodicRefresh.Install(path);
+ 
+ 	// Do this asynchronously because D2GFX_GetHwnd() will be null if
+ 	// we inject on process start
+@@ -132,6 +136,7 @@ void BH::Initialize()
+ 
+ bool BH::Shutdown()
+ {
++	reawakeningPeriodicRefresh.Remove();
+ 	if (initialized)
+ 	{
+ 		moduleManager->UnloadModules();
+diff --git a/BH/ReawakeningCompat.h b/BH/ReawakeningCompat.h
+new file mode 100644
+index 0000000..e24953d
+--- /dev/null
++++ b/BH/ReawakeningCompat.h
+@@ -0,0 +1,131 @@
++#pragma once
++
++#include <Windows.h>
++#include <cstring>
++#include <string>
++
++namespace ReawakeningCompat
++{
++	class PeriodicRefreshPatch
++	{
++		BYTE* address = nullptr;
++		HMODULE module = nullptr;
++		const BYTE original[5] = { 0xE8, 0x72, 0x54, 0xFB, 0xFF };
++		const BYTE replacement[5] = { 0x31, 0xC0, 0x90, 0x90, 0x90 };
++
++		static void Log(const char* message)
++		{
++			OutputDebugStringA("BH Reawakening compatibility: ");
++			OutputDebugStringA(message);
++			OutputDebugStringA("\n");
++		}
++
++		static void LogError(const char* operation)
++		{
++			char message[192];
++			wsprintfA(message, "%s failed (Win32 error %lu).", operation, GetLastError());
++			Log(message);
++		}
++
++		bool Write(const BYTE* bytes)
++		{
++			DWORD protection;
++			if (!VirtualProtect(address, sizeof(original), PAGE_EXECUTE_READWRITE, &protection))
++			{
++				LogError("VirtualProtect before write");
++				return false;
++			}
++
++			memcpy(address, bytes, sizeof(original));
++			bool flushed = FlushInstructionCache(GetCurrentProcess(), address, sizeof(original)) != FALSE;
++			if (!flushed)
++				LogError("FlushInstructionCache");
++
++			DWORD ignored;
++			bool restored = VirtualProtect(address, sizeof(original), protection, &ignored) != FALSE;
++			if (!restored)
++				LogError("VirtualProtect restoring page protection");
++			return flushed && restored;
++		}
++
++	public:
++		void Install(const std::string& directory)
++		{
++			if (address)
++				return;
++
++			// This file explicitly opts the entire process into SP-only Reawakening use.
++			// D2Game can remain loaded after a local game; its presence is not an online guard.
++			const std::string optIn = directory + "\\BH.ReawakeningSinglePlayer.enable";
++			DWORD attributes = GetFileAttributesA(optIn.c_str());
++			if (attributes == INVALID_FILE_ATTRIBUTES || (attributes & FILE_ATTRIBUTE_DIRECTORY))
++			{
++				Log("disabled: no BH.ReawakeningSinglePlayer.enable opt-in beside BH.dll.");
++				return;
++			}
++			if (!GetModuleHandleA("D2Game.dll"))
++			{
++				Log("not installed: local D2Game.dll is not loaded; restart in SP-only mode.");
++				return;
++			}
++
++			HMODULE pd2 = GetModuleHandleA("ProjectDiablo.dll");
++			if (!pd2)
++			{
++				Log("not installed: ProjectDiablo.dll is not loaded.");
++				return;
++			}
++			BYTE* base = reinterpret_cast<BYTE*>(pd2);
++			const IMAGE_DOS_HEADER* dos = reinterpret_cast<const IMAGE_DOS_HEADER*>(base);
++			if (dos->e_magic != IMAGE_DOS_SIGNATURE || dos->e_lfanew < sizeof(IMAGE_DOS_HEADER) || dos->e_lfanew > 0x1000)
++			{
++				Log("not installed: unexpected DOS header.");
++				return;
++			}
++			const IMAGE_NT_HEADERS32* pe = reinterpret_cast<const IMAGE_NT_HEADERS32*>(base + dos->e_lfanew);
++			// Local reference file SHA256: E7EEC2564811C7B347BC62B9D738569329C4971055B8F79CE42A9A5A250E903B.
++			if (pe->Signature != IMAGE_NT_SIGNATURE || pe->FileHeader.Machine != IMAGE_FILE_MACHINE_I386 ||
++				pe->FileHeader.TimeDateStamp != 1793816478 || pe->OptionalHeader.Magic != IMAGE_NT_OPTIONAL_HDR32_MAGIC ||
++				pe->OptionalHeader.SizeOfImage != 6606848)
++			{
++				Log("not installed: unsupported ProjectDiablo.dll PE timestamp, architecture or image size.");
++				return;
++			}
++
++			// Only the periodic stat-487 predicate is suppressed. Saved awakening values,
++			// affix markers and all other stat getters remain untouched.
++			const DWORD callRva = 0x345629;
++			const BYTE signature[] = {
++				0x85, 0xC0, 0x74, 0x33, 0x8B, 0x4B, 0x5C, 0xBA, 0x00, 0x00, 0xE7, 0x01,
++				0xE8, 0x72, 0x54, 0xFB, 0xFF, 0x85, 0xC0, 0x7E, 0x22, 0x8B, 0x44, 0x24, 0x14
++			};
++			if (memcmp(base + callRva - 12, signature, sizeof(signature)) != 0)
++			{
++				Log("not installed: periodic predicate surrounding signature differs.");
++				return;
++			}
++
++			module = pd2;
++			address = base + callRva;
++			if (Write(replacement))
++				Log("installed SP-only periodic stat-487 predicate suppression at ProjectDiablo.dll+345629.");
++			else
++				Log("installation incomplete; inspect preceding errors. Shutdown will restore owned bytes if present.");
++		}
++
++		void Remove()
++		{
++			if (!address)
++				return;
++
++			if (GetModuleHandleA("ProjectDiablo.dll") != module)
++				Log("not restored: original ProjectDiablo.dll is no longer loaded.");
++			else if (memcmp(address, replacement, sizeof(replacement)) != 0)
++				Log("not restored: predicate bytes are no longer ours; leaving them untouched.");
++			else if (Write(original))
++				Log("restored original periodic predicate call.");
++			address = nullptr;
++			module = nullptr;
++		}
++	};
++}

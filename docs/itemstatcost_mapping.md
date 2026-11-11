@@ -1,6 +1,8 @@
 # ItemStatCost merge mapping (S14 base + Reawakening stats)
 
-S14 vanilla order preserved; mod stats occupy reclaimed dead rows.
+S14 vanilla order preserved; mod stats occupy reclaimed rows originally classified as dead from table-reference analysis.
+
+**2026-11-11 correction:** row 487 is still read by PD2 runtime code. Reusing it for `awakener` activates a conditional once-per-second equipment-stat refresh and is strongly implicated in item-granted summon loss (equipment A/B confirmed). Do not renumber existing save stats without a migration plan. See [oskill summon investigation](oskill_summon_investigation.md).
 
 | row | removed (dead S14 stat) | inserted mod stat |
 |---|---|---|
