@@ -1,5 +1,26 @@
 # Build log
 
+## 2026-11-12 — Suppress native tooltip during the legacy panel pass
+
+- User confirmed disabling BH's three legacy text hooks did not remove duplicate full-stat tooltip windows, especially on some charms and uniques. Those hooks augment text and do not draw windows.
+- Disassembly identified the community wrapper calling D2Client RVA `99440`, then PD2's panel renderer. Native panel calls D2Client RVA `93450` from RVAs `9A786` / `9A7C0`; its tooltip branch tests persistent SelectedInvItem (`11BC38`), so hiding mouse coordinates does not reliably skip it. D2Win ordinal10085 submits the tooltip. D2GL queues framed tooltip drawing until the cursor stage, preserving both upstream submissions.
+- Added `BH/NativeTooltipCompat.h`: exact-version/signature-guarded runtime wrapper around the community patch's original-panel call at PD2 RVA `32DE1`. A private depth counter is nonzero only during that call. A gate at D2Client RVA `93450` returns with the verified `ret 8` during that pass, otherwise replays original `mov eax,6650` and continues at `93455`. PD2 rendering runs after depth is cleared. No disk edits to ProjectDiablo.dll or D2Client.dll.
+- Retains PD2 stash patch, HD text, tooltip callbacks, affix ranges/markers, and summon fix. Earlier legacy BH hook installations remain disabled.
+- Native Win32 build passed; isolated x86 harness verifies suppression versus normal pass, stack balance, nonvolatile registers, suppressed-path flags, original EAX prologue and depth restoration. Independent assembly review found no blocking ABI/branch defect for the matched build. This is restart-only; hot patching/unloading while rendering is not supported. In-game visual acceptance remains pending.
+- Installed BH SHA-256 `3E9E6752FCCAE0F802D977D2F5853CB1EA327641FA1990C829082F547219DD86` to ProjectD2 and repository bin. Previous build and current PD2/config files are in `ProjectD2/backup-tooltip-render-pass-20261112-1820/` (manifest included). PD2 on-disk hash remains `1F033588...`.
+- BH source is checkpointed locally at `ccffef8`. Delta: `tools/bh-native-tooltip.patch` against source baseline `9887821`, including the header. Research: temporary `tooltip-investigation/`; harness/build: temporary `tooltip-native-20261112/`.
+
+## 2026-11-12 — Use PD2 tooltip callbacks with the community stash patch
+
+- User confirmed the v6.2.0 community stash patch works and restores affix ranges, but reported two overlapping tooltip windows.
+- Earlier 2026-11-08 work enabled three D2Client hooks (`5612C`, `55D7B`, `55D9D`) while PD2's native rendering path was disabled under PlugY. The community patch now restores PD2's path.
+- Disabled installation of those three legacy hooks in BH `Item::OnLoad`, matching upstream's exported-callback arrangement. The exported `BHOnProperties`, `BHOnPropertyBuild`, and `BHOnDamagePropertyBuild` remain, including the existing full-tooltip range/color helpers and Reawakening affix markers. This removes the old hook route without discarding callback functionality needed by PD2. The summon fix is unchanged.
+- Built optimized native Win32 candidate with portable MSVC; all 10 exports match the prior DLL. Static validation confirms the source delta changes only those three hook installations and retains marker/range callbacks and summon code. `git diff --check` passes. Visual acceptance is pending; overlap removal is not yet user-confirmed.
+- Installed to `ProjectD2/BH.dll` and `bin/BH.dll`, SHA-256 `9DB42DA9630B2F3E5C48517C2F5BFD02EB6BE7ABE54E3A917B1015A76523F4A2`. Community-patched ProjectDiablo.dll remains unchanged (`1F033588...`).
+- Backup: `ProjectD2/backup-tooltip-native-20261112-1805/`, including prior live/repository BH DLLs, patched PD2 DLL, current BH.json/PlugY.ini, opt-in, and original Item.cpp. Prior BH SHA-256 `9BBB1458...`.
+- Delta: `tools/bh-native-tooltip.patch` against BH source commit `9887821`. Build artifacts and logs: `C:\Users\govno\AppData\Local\Temp\opencode\tooltip-native-20261112`.
+- Rollback with the game closed: restore backup `BH.dll` to ProjectD2 and backup `repo-BH.dll` to repository `bin/BH.dll`. If removing the community PD2 patch too, restore the old BH route as well because the exported callbacks previously lacked an active caller under PlugY.
+
 ## 2026-11-08 — Full-tooltip affix markers (user-confirmed working)
 
 - Source commit `5914c5d` in `scout/BH-s14-src`, separate from verified baseline `b06cd64`.

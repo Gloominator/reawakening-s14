@@ -1,0 +1,170 @@
+diff --git a/BH/BH.cpp b/BH/BH.cpp
+index bbe0f1e..6cd1adf 100644
+--- a/BH/BH.cpp
++++ b/BH/BH.cpp
+@@ -10,8 +10,10 @@
+ #include "Task.h"
+ #include "Drawing/Stats/StatsDisplay.h"
+ #include "ReawakeningCompat.h"
++#include "NativeTooltipCompat.h"
+ 
+ static ReawakeningCompat::PeriodicRefreshPatch reawakeningPeriodicRefresh;
++static NativeTooltipCompat::LegacyPanelTooltipPatch legacyPanelTooltipPatch;
+ 
+ string BH::path;
+ HINSTANCE BH::instance;
+@@ -84,6 +86,7 @@ void BH::Initialize()
+ 	CheckForD2GL();
+ 	CheckForPD2();
+ 	reawakeningPeriodicRefresh.Install(path);
++	legacyPanelTooltipPatch.Install();
+ 
+ 	// Do this asynchronously because D2GFX_GetHwnd() will be null if
+ 	// we inject on process start
+@@ -136,6 +139,7 @@ void BH::Initialize()
+ 
+ bool BH::Shutdown()
+ {
++	legacyPanelTooltipPatch.Remove();
+ 	reawakeningPeriodicRefresh.Remove();
+ 	if (initialized)
+ 	{
+diff --git a/BH/Modules/Item/Item.cpp b/BH/Modules/Item/Item.cpp
+index f98760e..e0a9e1a 100644
+--- a/BH/Modules/Item/Item.cpp
++++ b/BH/Modules/Item/Item.cpp
+@@ -152,10 +152,8 @@ void Item::OnLoad() {
+ 	dropToGroundIntercept->Install();
+ 	putInContainerIntercept->Install();
+ 
+-	//itemPropertiesPatch->Install();
+-	itemPropertiesPatch->Install();
+-	itemPropertyStringDamagePatch->Install();
+-	itemPropertyStringPatch->Install();
++	// The S14 PlugY compatibility patch restores PD2's calls to the exported
++	// BH tooltip callbacks; the legacy D2Client hooks must stay disabled.
+ 
+ 	itemNamePatch->Install();
+ 
+diff --git a/BH/NativeTooltipCompat.h b/BH/NativeTooltipCompat.h
+new file mode 100644
+index 0000000..26af6b6
+--- /dev/null
++++ b/BH/NativeTooltipCompat.h
+@@ -0,0 +1,116 @@
++#pragma once
++
++#include <Windows.h>
++#include <cstring>
++
++namespace NativeTooltipCompat
++{
++	static LONG legacyPanelDepth = 0;
++	static DWORD tooltipContinuation = 0;
++
++	static void __declspec(naked) LegacyPanelDraw()
++	{
++		__asm {
++			pushfd
++			inc dword ptr [legacyPanelDepth]
++			popfd
++			lea eax, [esi + 0x99440]
++			call eax
++			pushfd
++			dec dword ptr [legacyPanelDepth]
++			popfd
++			ret
++		}
++	}
++
++	static void __declspec(naked) ItemTooltipGate()
++	{
++		__asm {
++			pushfd
++			cmp dword ptr [legacyPanelDepth], 0
++			jne suppress
++			popfd
++			mov eax, 0x6650
++			jmp dword ptr [tooltipContinuation]
++		suppress:
++			popfd
++			ret 8
++		}
++	}
++
++	class LegacyPanelTooltipPatch
++	{
++		BYTE* panelSite = nullptr;
++		BYTE* tooltipSite = nullptr;
++		const BYTE panelOriginal[8] = { 0x8D, 0x86, 0x40, 0x94, 0x09, 0x00, 0xFF, 0xD0 };
++		const BYTE tooltipOriginal[5] = { 0xB8, 0x50, 0x66, 0x00, 0x00 };
++		BYTE panelReplacement[8] = {};
++		BYTE tooltipReplacement[5] = {};
++
++		static bool Write(BYTE* site, const BYTE* bytes, SIZE_T size)
++		{
++			DWORD previous;
++			if (!VirtualProtect(site, size, PAGE_EXECUTE_READWRITE, &previous))
++				return false;
++			memcpy(site, bytes, size);
++			const bool flushed = FlushInstructionCache(GetCurrentProcess(), site, size) != FALSE;
++			DWORD ignored;
++			const bool restored = VirtualProtect(site, size, previous, &ignored) != FALSE;
++			return flushed && restored;
++		}
++
++		static bool MatchesImage(BYTE* base, DWORD timestamp, DWORD size)
++		{
++			const IMAGE_DOS_HEADER* dos = reinterpret_cast<const IMAGE_DOS_HEADER*>(base);
++			if (dos->e_magic != IMAGE_DOS_SIGNATURE || dos->e_lfanew < sizeof(IMAGE_DOS_HEADER) || dos->e_lfanew > 0x1000)
++				return false;
++			const IMAGE_NT_HEADERS32* pe = reinterpret_cast<const IMAGE_NT_HEADERS32*>(base + dos->e_lfanew);
++			return pe->Signature == IMAGE_NT_SIGNATURE && pe->FileHeader.Machine == IMAGE_FILE_MACHINE_I386 &&
++				pe->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC &&
++				pe->FileHeader.TimeDateStamp == timestamp && pe->OptionalHeader.SizeOfImage == size;
++		}
++
++	public:
++		void Install()
++		{
++			if (panelSite)
++				return;
++			BYTE* pd2 = reinterpret_cast<BYTE*>(GetModuleHandleA("ProjectDiablo.dll"));
++			BYTE* client = reinterpret_cast<BYTE*>(GetModuleHandleA("D2Client.dll"));
++			if (!pd2 || !client || !MatchesImage(pd2, 1793816478, 6606848))
++				return;
++			// Exact v6.2.0 wrapper and native tooltip prologue for this installation.
++			const BYTE panelSignature[] = { 0x8D, 0x86, 0x40, 0x94, 0x09, 0x00, 0xFF, 0xD0, 0xE9, 0xB3, 0x84, 0x00, 0x00 };
++			const BYTE tooltipSignature[] = { 0xB8, 0x50, 0x66, 0x00, 0x00, 0xE8, 0x06, 0x4A, 0xF7, 0xFF, 0x53, 0x55, 0x33, 0xDB };
++			if (memcmp(pd2 + 0x32DE1, panelSignature, sizeof(panelSignature)) != 0 ||
++				memcmp(client + 0x93450, tooltipSignature, sizeof(tooltipSignature)) != 0)
++				return;
++
++			panelSite = pd2 + 0x32DE1;
++			tooltipSite = client + 0x93450;
++			tooltipContinuation = reinterpret_cast<DWORD>(tooltipSite + sizeof(tooltipOriginal));
++			memset(panelReplacement, 0x90, sizeof(panelReplacement));
++			panelReplacement[0] = 0xE8;
++			*reinterpret_cast<DWORD*>(panelReplacement + 1) = reinterpret_cast<DWORD>(&LegacyPanelDraw) - reinterpret_cast<DWORD>(panelSite + 5);
++			tooltipReplacement[0] = 0xE9;
++			*reinterpret_cast<DWORD*>(tooltipReplacement + 1) = reinterpret_cast<DWORD>(&ItemTooltipGate) - reinterpret_cast<DWORD>(tooltipSite + 5);
++			if (!Write(tooltipSite, tooltipReplacement, sizeof(tooltipReplacement)) ||
++				!Write(panelSite, panelReplacement, sizeof(panelReplacement)))
++			{
++				Remove();
++				return;
++			}
++			OutputDebugStringA("BH: native item tooltip suppressed only during the legacy PlugY panel pass.\n");
++		}
++
++		void Remove()
++		{
++			if (panelSite && memcmp(panelSite, panelReplacement, sizeof(panelReplacement)) == 0)
++				Write(panelSite, panelOriginal, sizeof(panelOriginal));
++			if (tooltipSite && memcmp(tooltipSite, tooltipReplacement, sizeof(tooltipReplacement)) == 0)
++				Write(tooltipSite, tooltipOriginal, sizeof(tooltipOriginal));
++			panelSite = nullptr;
++			tooltipSite = nullptr;
++		}
++	};
++}

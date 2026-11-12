@@ -98,7 +98,16 @@ Reawakening's S11 BH. The pristine native DLL remains in `ProjectD2/Live/BH.dll`
 this custom build is preserved as `ProjectD2/BH.dll.before-ra-affix-markers`. The older RA DLL is
 preserved as `ProjectD2/BH.dll.before-s14bh-upgrade`. Modified BH is for single-player only.
 
-The tooltip hook `itemPropertiesPatch` is explicitly enabled again. Upstream `c867a7f9` ("A few
+**2026-11-12 update:** the installed community S14 stash patch now restores PD2's native
+rendering/callback path. The current BH disables the three legacy D2Client tooltip-hook
+installations while retaining the exported callbacks, range/color helpers, affix markers and
+summon fix. Disabling the legacy text hooks alone did not resolve duplicate windows. The current
+BH also suppresses the original D2 item tooltip only during the community wrapper's legacy
+panel pass; PD2 draws the final tooltip afterward. Visual acceptance of that fix is pending.
+See `docs/build_log.md` and `tools/bh-native-tooltip.patch`. The paragraph below describes the
+previous workaround, needed before the community patch was installed.
+
+The tooltip hook `itemPropertiesPatch` was explicitly enabled again. Upstream `c867a7f9` ("A few
 function exports") turned `Item::OnProperties` into the exported `BHOnProperties` but commented out
 both the patch and its `GetProperties_Interception` caller, so nothing ever called into it. That
 silently disabled item level display, affix level display, stat ranges and all filter description
