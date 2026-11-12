@@ -6,6 +6,12 @@ content (awakened items, replica/legacy items, fate cards, orbs, boosted rune/ge
 
 This document is written for the mod's original author (and anyone else who wants to polish it).
 
+> **CUSTOM GAMEPLAY WARNING:** This local snapshot also includes the owner's mirror and
+> fate-card changes, made to personal taste. Those changes are **not a faithful port of RA
+> to S14** and must not be attributed to Reawakening's author. See
+> [custom mirror changes](docs/custom_mirror_changes.md) for the scope, including enabled
+> convenience/test recipes. They are recorded separately in Git with a `CUSTOM` label.
+
 ## How the port was done
 
 The approach is a **data merge**, not a file swap: PD2 S14's data is the base (so all S12–S14

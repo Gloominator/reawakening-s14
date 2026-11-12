@@ -1036,8 +1036,8 @@ Horadric TP Book N				5000	100																											0
 Horadric TP Book NM				5000	100																											0
 Horadric TP Book H				5000	100																											0
 Lillith Mirror N				15000	100																											0
-Lillith Mirror NM				15000	100																											0
-Lillith Mirror H				15000	100																											0
+Lillith Mirror NM				7500	100																											0
+Lillith Mirror H				2500	100																											0
 Vial of Lightsong N				7500	100																											0
 Vial of Lightsong NM				7500	100																											0
 Vial of Lightsong H				7500	100																											0

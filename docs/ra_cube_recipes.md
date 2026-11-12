@@ -77,6 +77,11 @@ One recipe per item type per property (~140 recipes, all enabled):
 
 ## 3. Lillith's Mirror (`llmr`) — duplicate an item
 
+> **Custom override:** the current local snapshot expands these recipes and changes the
+> False Reflection cost according to the owner's personal preference. This is not RA-to-S14
+> port parity; see [custom mirror changes](custom_mirror_changes.md). The list below
+> describes the earlier port baseline.
+
 Item + Mirror → 2× the item (`useitem | useitem`):
 - Unique weapon, armor, amulet, jewel; magic small/large/grand charm; magic skill grand charm
 - *([disabled]) Unique ring*

@@ -1422,21 +1422,21 @@ exp charm	0			100	18	361	0		2	"cm2,mag"	"wss,qty=1"						useitem	95		100	corrupt
 frw charm	0			100	18	361	0		2	"cm3,mag"	"wss,qty=1"						useitem	95		100	corrupt	100		1	1	corruptnum	100		1001	1001	move2	100		107	107																																																																					0
 Lightsong - Eth weap	1			100					2	"weap,noe"	lsvl						useitem	95		100	ethereal	100		1	1																																																																															0
 Lightsong - Eth armor	1			100					2	"armo,noe"	lsvl						useitem	95		100	ethereal	100		1	1																																																																															0
-Lillith's Mirror weap (magic)	1			100					2	"weap,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror armo (magic)	1			100					2	"armo,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror ring (magic)	1			100					2	"ring,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror amul (magic)	1			100					2	"amul,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror jewl (magic)	0			100					2	"jew,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror weap (rare)	1			100					2	"weap,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror armo (rare)	1			100					2	"armo,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror ring (rare)	1			100					2	"ring,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror amul (rare)	1			100					2	"amul,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror jewl (rare)	0			100					2	"jew,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror weap (craft)	1			100					2	"weap,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror armo (craft)	1			100					2	"armo,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror ring (craft)	1			100					2	"ring,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror amul (craft)	1			100					2	"amul,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror jewl (craft)	0			100					2	"jew,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
+Lillith's Mirror weap (magic)	1			100					2	"weap,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror armo (magic)	1			100					2	"armo,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror ring (magic)	1			100					2	"ring,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror amul (magic)	1			100					2	"amul,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror jewl (magic)	1			100					2	"jew,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror weap (rare)	1			100					2	"weap,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror armo (rare)	1			100					2	"armo,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror ring (rare)	1			100					2	"ring,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror amul (rare)	1			100					2	"amul,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror jewl (rare)	1			100					2	"jew,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror weap (craft)	1			100					2	"weap,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror armo (craft)	1			100					2	"armo,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror ring (craft)	1			100					2	"ring,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror amul (craft)	1			100					2	"amul,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror jewl (craft)	1			100					2	"jew,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
 rathma ingredients	1			100					3	"rtmv,qty=1"	"Hellfire Torch"	"rtmo,qty=1"					rtma																																																																																							0
 fragment -> jawbone	1			100					2	"rtmf,qty=2"	"Hellfire Torch"						rtmo																																																																																							0
 Jewel -> Jewel Fragments x15	1			100					2	"key,qty=1"	"jew,qty=15"						useitem			100																										"jewf,qty=15"			100																																																							0
@@ -2125,24 +2125,24 @@ imbued t1 map reroll magic	1	4		100	18	361	0		2	"t1me,mag,qty=1"	"irma,qty=1"			
 imbued t2 map reroll magic	1	4		100	18	361	0		2	"t2me,mag,qty=1"	"irma,qty=1"						"usetype,mag"			100																																																																																				0
 imbued t3 map reroll magic	1	4		100	18	361	0		2	"t3me,mag,qty=1"	"irma,qty=1"						"usetype,mag"			100																																																																																				0
 Puzzlebox 1h throw weapon	1			100					2	"thro,nos"	"lbox,qty=1"						useitem			100	sock			1	2																																																																															0
-Lillith's Mirror arrows (magic)	1			100					2	"aqv,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (magic)	1			100					2	"cqv,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (rare)	1			100					2	"aqv,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (rare)	1			100					2	"cqv,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (craft)	1			100					2	"aqv,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (craft)	1			100					2	"cqv,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (magic) exceptional	1			100					2	"aqv2,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (magic) exceptional	1			100					2	"cqv2,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (rare) exceptional	1			100					2	"aqv2,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (rare) exceptional	1			100					2	"cqv2,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (craft) exceptional	1			100					2	"aqv2,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (craft) exceptional	1			100					2	"cqv2,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (magic) elite	1			100					2	"aqv3,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (magic) elite	1			100					2	"cqv3,mag"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (rare) elite	1			100					2	"aqv3,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (rare) elite	1			100					2	"cqv3,rar"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror arrows (craft) elite	1			100					2	"aqv3,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror bolts (craft) elite	1			100					2	"cqv3,crf"	llmr						useitem	99		100	dye	100		4	4	mirrored	100		1	1																useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
+Lillith's Mirror arrows (magic)	1			100					2	"aqv,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (magic)	1			100					2	"cqv,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (rare)	1			100					2	"aqv,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (rare)	1			100					2	"cqv,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (craft)	1			100					2	"aqv,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (craft)	1			100					2	"cqv,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (magic) exceptional	1			100					2	"aqv2,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (magic) exceptional	1			100					2	"cqv2,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (rare) exceptional	1			100					2	"aqv2,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (rare) exceptional	1			100					2	"cqv2,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (craft) exceptional	1			100					2	"aqv2,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (craft) exceptional	1			100					2	"cqv2,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (magic) elite	1			100					2	"aqv3,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (magic) elite	1			100					2	"cqv3,mag"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (rare) elite	1			100					2	"aqv3,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (rare) elite	1			100					2	"cqv3,rar"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror arrows (craft) elite	1			100					2	"aqv3,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror bolts (craft) elite	1			100					2	"cqv3,crf"	llmr						useitem	99		100	dye	100		4	4																					useitem	99		100	dye	100		21	21																																																		0
 map norm + ear amazon	1			2	30				2	"map,nor"	"ivez,qty=1"						useitem			100																																																																																				0
 map unique + ear amazon	1			2	30				2	"map,uni"	"ivez,qty=1"						useitem			100																																																																																				0
 map + ear amazon	1			100	18	276	0		2	map	"ivez,qty=1"						useitem			100	zon-ear-drops	100		10	10	map-glob-dropbonus	100		50	50	treacherous	100		1	1	map-mon-att-cast-speed	100		50	50	map-mon-velocity%	100		25	25																																																											0
@@ -2528,15 +2528,15 @@ add corrupt factor to glove (replica hand of broc)	1	2		100	18	361	0		2	"glov"	"
 add corrupt factor to boot (replica malthael)	1	2		100	18	361	0		2	"boot"	"wss,qty=1"						useitem			100	corruptnum	100		1	1000																					"wss,qty=1"																																																										0
 add corrupt factor to torch	1	2		100	18	361	0		2	"Hellfire Torch"	"cwss,qty=1"						useitem			100	corruptnum	100		1	1000																					"cwss,qty=1"																																																										0
 HELLFIRE TORCH	0																																																																																																							0
-Lillith's Mirror weap (uni)	1	2		100					2	"weap,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror armo (uni)	1	2		100					2	"armo,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror ring (uni)	0	2		100					2	"ring,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror amul (uni)	1	2		100					2	"amul,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror jewl (uni)	1	2		100					2	"jew,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror small charm	1	2		100					2	"cm1,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror large charm	1	2		100					2	"cm2,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror grand charm	1	2		100					2	"cm3,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
-Lillith's Mirror skill grand charm	1	2		100					2	"cms,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21	mirrored	100		1	1																																													0
+Lillith's Mirror weap (uni)	1	2		100					2	"weap,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror armo (uni)	1	2		100					2	"armo,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror ring (uni)	1	2		100					2	"ring,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror amul (uni)	1	2		100					2	"amul,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror jewl (uni)	1	2		100					2	"jew,uni"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror small charm	1	2		100					2	"cm1,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror large charm	1	2		100					2	"cm2,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror grand charm	1	2		100					2	"cm3,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
+Lillith's Mirror skill grand charm	1	2		100					2	"cms,mag"	llmr						useitem	99		100																										useitem	99		100	dye	100		21	21																																																		0
 test map drop increase jewelry -- map + perfect topas (gpys)	0			100					2	"map"	"gpy,qty=1"						useitem			100	map-mon-dropjewelry	100		20	20																																																																															0
 test map drop increase weapons -- map + perfect ruby (gprs)	0			100					2	"map"	"gpr,qty=1"						useitem			100	map-mon-dropweapons	100		20	20																																																																															0
 test map drop increase armor -- map + perfect sapphire (gpbs)	0			100					2	"map"	"gpb,qty=1"						useitem			100	map-mon-droparmor	100		20	20																																																																															0
@@ -2806,7 +2806,7 @@ generate (dev)	0			100					1	"key,qty=1"							fsph,qty=50	131																		
 1 of Prismatic Splinters -> 10 jewel fragments	1			100					1	fsps,qty=1							"jewf,qty=10"		100																																																																																					0
 3 of Momentum Shift -> FHR skiller grand charm	1			100					1	fsms,qty=3							"cms,mag,pre=999,suf=265"	99																																																																																						0
 5 of Larzuk's Anvil -> puzzlebox	1			100					1	fsla,qty=5							"lbox,qty=1"																																																																																							0
-9 of The False Reflection -> mirror	1			100					1	fsfr,qty=9							llmr																																																																																							0
+1 of The False Reflection -> mirror	1			100					1	fsfr,qty=1							llmr																																																																																							0
 7 of Bottled Radiance -> vial of lightsong	1			100					1	fsbr,qty=7							lsvl																																																																																							0
 9 of The Lord of Terror -> Vision of Terror	1			100					1	fslr,qty=9							dcma																																																																																							0
 3 of Victory -> 5 standard of heroes	1			100					1	fsvi,qty=3							"std,qty=5"																																																																																							0
@@ -3063,4 +3063,94 @@ SP+ Charsi: Vampiric infusion	1			100	16	361	334		1	ccbx							crfv,qty=10						
 SP+ Charsi: Bountiful infusion	1			100	16	361	401		1	ccbx							crfu,qty=10																																																																																							0
 SP+ Charsi: Prismatic infusion	1			100	16	361	468		1	ccbx							crfp,qty=10																																																																																							0
 SP+ Charsi: Catalyst shards	1			100	16	361	506		1	ccbx							iwss,qty=10																																																																																							0
-TEST - Gheed box: Lesser Healing Potion + Town Portal Scroll	1			100					2	hp1	tsc						gcbx																																																																																							0
+Mirror set armor	1			100	18	361	0		2	armo,set	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror set weapon	1			100	18	361	0		2	weap,set	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror set ring	1			100	18	361	0		2	ring,set	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror set amulet	1			100	18	361	0		2	amul,set	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror map	1			100					2	map	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror map t4	1			100					2	t4m	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror map t5	1			100					2	t5m	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Larzuk's Puzzle Box	1			100					2	lbox	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Larzuk's Puzzle Piece	1			100					2	lpp	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Orb of Unmaking	1			100					2	oou	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Demonic Cube	1			100					2	imrn	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror unique small charm	1			100	18	361	0		2	cm1,uni	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror unique large charm	1			100	18	361	0		2	cm2,uni	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror unique grand charm	1			100	18	361	0		2	cm3,uni	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+SP+ 2 of a kind -> random fate card (fsls)	1			100					2	fsls,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fslu)	1			100					2	fslu,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsat)	1			100					2	fsat,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsus)	1			100					2	fsus,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsrb)	1			100					2	fsrb,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstm)	1			100					2	fstm,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsdn)	1			100					2	fsdn,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsht)	1			100					2	fsht,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsed)	1			100					2	fsed,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsgd)	1			100					2	fsgd,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fslc)	1			100					2	fslc,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fshs)	1			100					2	fshs,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fspv)	1			100					2	fspv,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fscf)	1			100					2	fscf,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fscs)	1			100					2	fscs,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsta)	1			100					2	fsta,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsha)	1			100					2	fsha,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstc)	1			100					2	fstc,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsdw)	1			100					2	fsdw,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsts)	1			100					2	fsts,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsdg)	1			100					2	fsdg,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsds)	1			100					2	fsds,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsdb)	1			100					2	fsdb,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstf)	1			100					2	fstf,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsjp)	1			100					2	fsjp,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsap)	1			100					2	fsap,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstl)	1			100					2	fstl,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsdi)	1			100					2	fsdi,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsbl)	1			100					2	fsbl,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fssf)	1			100					2	fssf,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsse)	1			100					2	fsse,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsew)	1			100					2	fsew,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fssg)	1			100					2	fssg,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstu)	1			100					2	fstu,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsmw)	1			100					2	fsmw,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsar)	1			100					2	fsar,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstw)	1			100					2	fstw,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsem)	1			100					2	fsem,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsps)	1			100					2	fsps,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsms)	1			100					2	fsms,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsla)	1			100					2	fsla,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsfr)	1			100					2	fsfr,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsbr)	1			100					2	fsbr,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fslr)	1			100					2	fslr,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsvi)	1			100					2	fsvi,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstb)	1			100					2	fstb,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsfa)	1			100					2	fsfa,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsbm)	1			100					2	fsbm,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstd)	1			100					2	fstd,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsch)	1			100					2	fsch,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fste)	1			100					2	fste,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsas)	1			100					2	fsas,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsuw)	1			100					2	fsuw,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsmi)	1			100					2	fsmi,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fslt)	1			100					2	fslt,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsaj)	1			100					2	fsaj,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fstv)	1			100					2	fstv,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fswe)	1			100					2	fswe,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsre)	1			100					2	fsre,qty=2	key,qty=1						void		100																																																																																					0
+SP+ 2 of a kind -> random fate card (fsph)	1			100					2	fsph,qty=2	key,qty=1						void		100																																																																																					0
+Mirror Catalyst Shard	1			100					2	iwss,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Standard of Heroes	1			100					2	std,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Worldstone Shard	1			100					2	wss,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Corrupted Worldstone Shard	1			100					2	cwss,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Awakening Stone	1			100					2	awst,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Amazon)	1			100					2	ivez,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Assassin)	1			100					2	ivea,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Barbarian)	1			100					2	iveb,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Druid)	1			100					2	ived,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Necromancer)	1			100					2	iven,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Paladin)	1			100					2	ivep,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+Mirror Invader Ear (Sorceress)	1			100					2	ives,qty=1	llmr						useitem				dye	100		4	4																					useitem				dye	100		21	21																																																		0
+TEST - Mirror: Lesser Healing Potion + Town Portal Scroll	1			100					2	hp1	tsc						llmr																																																																																							0
+TEST - Puzzle Piece: Lesser Mana Potion + Town Portal Scroll	1			100					2	mp1	tsc						lpp																																																																																							0
+TEST - Puzzle Box: Lesser Mana Potion + Identify Scroll	1			100					2	mp1	isc						lbox																																																																																							0
+TEST - Orb of Unmaking: Lesser Healing Potion + Identify Scroll	1			100					2	hp1	isc						oou																																																																																							0
+TEST - Demonic Cube: Lesser Healing Potion + Skeleton Key	1			100					2	hp1	key,qty=1						imrn																																																																																							0
